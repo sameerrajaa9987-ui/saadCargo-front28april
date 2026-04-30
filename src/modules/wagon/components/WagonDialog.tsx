@@ -59,7 +59,8 @@ export function WagonDialog({
     }
   }
 
-  async function handleBookingChange(bookingId: string) {
+  async function handleBookingChange(bookingId: string | null) {
+    if (!bookingId) return;
     setForm({ ...form, linkedBookingId: bookingId });
     const selectedBooking = bookings.find((b) => b.id === bookingId);
     if (selectedBooking) {

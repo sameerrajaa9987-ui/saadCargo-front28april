@@ -124,7 +124,7 @@ export function UserDialog({
             </label>
             <Select
               value={form.role}
-              onValueChange={(value) => setForm({ ...form, role: value })}
+              onValueChange={(value) => setForm({ ...form, role: value ?? "" })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select role" />

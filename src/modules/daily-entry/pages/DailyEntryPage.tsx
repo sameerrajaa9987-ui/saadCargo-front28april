@@ -163,7 +163,7 @@ function QuickBookingForm() {
             </label>
             <Select
               value={form.clientId}
-              onValueChange={(value) => setForm({ ...form, clientId: value })}
+              onValueChange={(value) => setForm({ ...form, clientId: value ?? "" })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select client">
@@ -186,7 +186,7 @@ function QuickBookingForm() {
             <Select
               value={form.bookingType}
               onValueChange={(value) =>
-                setForm({ ...form, bookingType: value })
+                setForm({ ...form, bookingType: value ?? "" })
               }
             >
               <SelectTrigger>
@@ -204,7 +204,7 @@ function QuickBookingForm() {
             </label>
             <Select
               value={form.parcelType}
-              onValueChange={(value) => setForm({ ...form, parcelType: value })}
+              onValueChange={(value) => setForm({ ...form, parcelType: value ?? "" })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select type" />
@@ -416,7 +416,7 @@ function RecordExpenseForm() {
           </label>
           <Select
             value={form.category}
-            onValueChange={(value) => setForm({ ...form, category: value })}
+            onValueChange={(value) => setForm({ ...form, category: value ?? "" })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select category" />
@@ -469,7 +469,7 @@ function RecordExpenseForm() {
           </label>
           <Select
             value={form.mode}
-            onValueChange={(value) => setForm({ ...form, mode: value })}
+            onValueChange={(value) => setForm({ ...form, mode: value ?? "" })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select mode" />
@@ -596,7 +596,7 @@ function QuickPaymentForm() {
             <Select
               value={form.paymentType}
               onValueChange={(value) =>
-                setForm({ ...form, paymentType: value })
+                setForm({ ...form, paymentType: value ?? "" })
               }
             >
               <SelectTrigger>
@@ -619,7 +619,7 @@ function QuickPaymentForm() {
                   const client = clients?.find((c) => c.id === value);
                   setForm({
                     ...form,
-                    clientId: value,
+                    clientId: value ?? "",
                     clientOrVendorName: client?.name || "",
                   });
                 }}
@@ -688,7 +688,7 @@ function QuickPaymentForm() {
             </label>
             <Select
               value={form.mode}
-              onValueChange={(value) => setForm({ ...form, mode: value })}
+              onValueChange={(value) => setForm({ ...form, mode: value ?? "" })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select mode" />

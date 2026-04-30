@@ -204,7 +204,7 @@ export function ReportsPage() {
             <Button onClick={generateReport} disabled={loading}>
               Generate Report
             </Button>
-            {reportData && (
+            {!!reportData && (
               <Button variant="outline" onClick={handlePrint}>
                 <Printer className="mr-2 h-4 w-4" />
                 Print / Save PDF
@@ -225,7 +225,7 @@ export function ReportsPage() {
               </div>
             )}
 
-            {!loading && reportData && (
+            {!loading && !!reportData && (
               <div className="rounded-xl border border-border bg-card shadow-sm">
                 <div className="border-b border-border px-6 py-4">
                   <h2 className="text-lg font-semibold">

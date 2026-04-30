@@ -177,7 +177,7 @@ export function RailwayBookingDialog({
               <Select
                 value={form.linkedBookingId}
                 onValueChange={(value) =>
-                  setForm({ ...form, linkedBookingId: value })
+                  setForm({ ...form, linkedBookingId: value ?? "" })
                 }
               >
                 <SelectTrigger>

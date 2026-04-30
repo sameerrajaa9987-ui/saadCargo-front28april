@@ -189,7 +189,7 @@ export function InventoryDialog({
               <Select
                 value={form.bookingId}
                 onValueChange={(value) =>
-                  setForm({ ...form, bookingId: value })
+                  setForm({ ...form, bookingId: value ?? "" })
                 }
               >
                 <SelectTrigger>

@@ -186,7 +186,7 @@ export function PaymentDialog({
               </label>
               <Select
                 value={form.clientId}
-                onValueChange={(value) => setForm({ ...form, clientId: value })}
+                onValueChange={(value) => setForm({ ...form, clientId: value ?? "" })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select client" />
@@ -207,7 +207,7 @@ export function PaymentDialog({
               <Select
                 value={form.linkedBookingId}
                 onValueChange={(value) =>
-                  setForm({ ...form, linkedBookingId: value })
+                  setForm({ ...form, linkedBookingId: value ?? "" })
                 }
               >
                 <SelectTrigger>

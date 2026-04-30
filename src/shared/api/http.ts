@@ -24,6 +24,7 @@ http.interceptors.response.use(
       if (hasToken) {
         store.dispatch(clearAuth());
       }
+
       if (
         typeof window !== "undefined" &&
         window.location.pathname !== "/login"
@@ -31,15 +32,21 @@ http.interceptors.response.use(
         window.location.assign("/login");
       }
     }
+
     return Promise.reject(err);
   },
 );
+
+type ApiValidationIssue = {
+  path?: Array<string | number>;
+  message?: string;
+};
 
 type ApiErrorResponse = {
   error?: {
     message?: string;
     details?: {
-      issues?: { path?: Array<string | number>; message?: string }[];
+      issues?: ApiValidationIssue[];
     };
   };
 };

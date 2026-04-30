@@ -50,7 +50,7 @@ export function LedgerPage() {
             </label>
             <Select
               value={accountType}
-              onValueChange={(value) => setAccountType(value)}
+              onValueChange={(value) => setAccountType(value ?? "")}
             >
               <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="All Accounts" />
