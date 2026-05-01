@@ -79,26 +79,25 @@ function StatCard({
   };
 
   return (
-    <Card className="group relative overflow-hidden transition-all hover:shadow-lg">
-      <CardContent className="p-5">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground">{label}</p>
-            <p className="mt-2 text-2xl font-bold text-foreground">
+    <Card className="border-border/50 bg-card/50 backdrop-blur-sm transition-all hover:border-border hover:shadow-md">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              {label}
+            </p>
+            <p className="mt-1 text-3xl font-semibold tracking-tight text-foreground">
               {prefix}
               {typeof value === "number" ? value.toLocaleString() : value}
             </p>
           </div>
           <div
-            className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${colorMap[color].from} ${colorMap[color].to} text-white shadow-sm`}
+            className={`ml-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${colorMap[color].from} ${colorMap[color].to} text-white shadow-lg`}
           >
-            <Icon className="h-5 w-5" />
+            <Icon className="h-6 w-6" />
           </div>
         </div>
       </CardContent>
-      <div
-        className={`absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r opacity-0 transition-opacity group-hover:opacity-100 ${colorMap[color].from} ${colorMap[color].to}`}
-      />
     </Card>
   );
 }
@@ -146,16 +145,16 @@ export function DashboardPage() {
   if (user?.role === "admin" && adminData) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
             Admin Dashboard
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="text-muted-foreground">
             Overview of Saad Cargo operations this month
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <StatCard
             icon={Package}
             label="Bookings"
@@ -194,47 +193,53 @@ export function DashboardPage() {
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2">
           {/* Revenue Chart */}
-          <Card>
+          <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-lg">
                 <BarChart3 className="h-5 w-5 text-primary" />
                 Revenue (Last 6 Months)
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={260}>
+              <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={adminData.monthlyRevenue}>
                   <CartesianGrid
                     strokeDasharray="3 3"
                     stroke="hsl(var(--border))"
+                    vertical={false}
                   />
                   <XAxis
                     dataKey="month"
-                    tick={{ fontSize: 12 }}
-                    stroke="hsl(var(--muted-foreground))"
+                    tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                    stroke="hsl(var(--border))"
+                    axisLine={false}
+                    tickLine={false}
                   />
                   <YAxis
-                    tick={{ fontSize: 12 }}
-                    stroke="hsl(var(--muted-foreground))"
+                    tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                    stroke="hsl(var(--border))"
+                    axisLine={false}
+                    tickLine={false}
                   />
                   <Tooltip
                     contentStyle={{
                       borderRadius: 8,
                       border: "1px solid hsl(var(--border))",
                       background: "hsl(var(--card))",
+                      fontSize: 12,
                     }}
                   />
                   <Bar
                     dataKey="revenue"
-                    fill="hsl(var(--primary))"
+                    fill="#3b82f6"
                     radius={[4, 4, 0, 0]}
                     name="Revenue (₨)"
                   />
                   <Bar
                     dataKey="profit"
-                    fill="hsl(var(--chart-2))"
+                    fill="#10b981"
                     radius={[4, 4, 0, 0]}
                     name="Profit (₨)"
                   />
@@ -244,22 +249,22 @@ export function DashboardPage() {
           </Card>
 
           {/* Recent Bookings */}
-          <Card>
+          <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
             <CardHeader className="flex items-center justify-between">
-              <CardTitle>Recent Bookings</CardTitle>
+              <CardTitle className="text-lg">Recent Bookings</CardTitle>
               <button
                 onClick={() => window.location.assign("/bookings")}
-                className="text-xs text-primary hover:underline"
+                className="text-sm font-medium text-primary hover:underline"
               >
                 View All
               </button>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {adminData.recentBookings.map((b) => (
                   <div
                     key={b.id}
-                    className="flex items-center justify-between rounded-lg bg-accent/50 px-4 py-3"
+                    className="flex items-center justify-between rounded-lg border border-border/50 bg-accent/50 px-4 py-3 transition-colors hover:bg-accent/70"
                   >
                     <div>
                       <div className="text-sm font-medium text-foreground">
@@ -278,7 +283,7 @@ export function DashboardPage() {
                   </div>
                 ))}
                 {adminData.recentBookings.length === 0 && (
-                  <p className="py-8 text-center text-sm text-muted-foreground">
+                  <p className="py-12 text-center text-sm text-muted-foreground">
                     No bookings yet
                   </p>
                 )}
@@ -294,15 +299,15 @@ export function DashboardPage() {
   if (user?.role === "operator" && operatorData) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
             Operator Dashboard
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="text-muted-foreground">
             Your daily operations overview
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-3">
           <StatCard
             icon={Package}
             label="Today's Bookings"
@@ -330,15 +335,15 @@ export function DashboardPage() {
   if (user?.role === "accountant" && accountantData) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
             Accountant Dashboard
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="text-muted-foreground">
             Financial overview
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <StatCard
             icon={TrendingUp}
             label="Today's Debits"
