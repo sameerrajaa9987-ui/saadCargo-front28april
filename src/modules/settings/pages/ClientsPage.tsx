@@ -5,7 +5,7 @@ import {
 } from "@/modules/settings/hooks/useClients";
 import { ClientDialog } from "@/modules/settings/components/ClientDialog";
 import type { ClientRow } from "@/modules/settings/types";
-import { formatPKR, formatDate } from "@/shared/lib/utils";
+import { formatINR, formatDate } from "@/shared/lib/utils";
 
 type ClientQuery = {
   search?: string;
@@ -51,7 +51,7 @@ export function ClientsPage() {
           header: "Outstanding",
           getValue: (item) =>
             item.outstandingBalance > 0
-              ? formatPKR(item.outstandingBalance)
+              ? formatINR(item.outstandingBalance)
               : "—",
           valueClassName: "text-right font-semibold text-amber-600",
         },

@@ -1,6 +1,6 @@
 import { useProfitLoss } from "@/modules/accounts/hooks/useLedger";
 import type { PnlData } from "@/modules/accounts/types";
-import { formatPKR } from "@/shared/lib/utils";
+import { formatINR } from "@/shared/lib/utils";
 import {
   TrendingUp,
   TrendingDown,
@@ -92,7 +92,7 @@ export function ProfitLossPage() {
                 </span>
               </div>
               <span className={`text-lg font-bold ${item.color}`}>
-                {formatPKR(item.value)}
+                {formatINR(item.value)}
               </span>
             </CardContent>
           </Card>

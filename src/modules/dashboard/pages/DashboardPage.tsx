@@ -21,7 +21,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/shared/components/StatusBadge";
-import { formatPKR } from "@/shared/lib/utils";
+import { formatINR } from "@/shared/lib/utils";
 
 type AdminData = {
   bookingsThisMonth: number;
@@ -164,13 +164,13 @@ export function DashboardPage() {
           <StatCard
             icon={TrendingUp}
             label="Revenue"
-            value={formatPKR(adminData.revenueThisMonth)}
+            value={formatINR(adminData.revenueThisMonth)}
             color="green"
           />
           <StatCard
             icon={DollarSign}
             label="Net Profit"
-            value={formatPKR(adminData.profitThisMonth)}
+            value={formatINR(adminData.profitThisMonth)}
             color="purple"
           />
           <StatCard
@@ -276,7 +276,7 @@ export function DashboardPage() {
                     </div>
                     <div className="text-right">
                       <div className="text-sm font-semibold text-foreground">
-                        {formatPKR(b.sellingPrice)}
+                        {formatINR(b.sellingPrice)}
                       </div>
                       <StatusBadge status={b.status} />
                     </div>
@@ -347,37 +347,37 @@ export function DashboardPage() {
           <StatCard
             icon={TrendingUp}
             label="Today's Debits"
-            value={formatPKR(accountantData.todayDebits)}
+            value={formatINR(accountantData.todayDebits)}
             color="red"
           />
           <StatCard
             icon={DollarSign}
             label="Today's Credits"
-            value={formatPKR(accountantData.todayCredits)}
+            value={formatINR(accountantData.todayCredits)}
             color="green"
           />
           <StatCard
             icon={Clock}
             label="Outstanding Receivables"
-            value={formatPKR(accountantData.outstandingReceivables)}
+            value={formatINR(accountantData.outstandingReceivables)}
             color="yellow"
           />
           <StatCard
             icon={TrendingUp}
             label="Total Revenue"
-            value={formatPKR(accountantData.revenue)}
+            value={formatINR(accountantData.revenue)}
             color="orange"
           />
           <StatCard
             icon={DollarSign}
             label="Total Cost"
-            value={formatPKR(accountantData.cost)}
+            value={formatINR(accountantData.cost)}
             color="purple"
           />
           <StatCard
             icon={BarChart3}
             label="Net Profit"
-            value={formatPKR(accountantData.profit)}
+            value={formatINR(accountantData.profit)}
             color="indigo"
           />
         </div>

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useBooking } from "../hooks/useBookings";
-import { formatPKR, formatDateTime } from "@/shared/lib/utils";
+import { formatINR, formatDateTime } from "@/shared/lib/utils";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -201,7 +201,7 @@ export function BookingDetailPage() {
                     Cost Price
                   </p>
                   <p className="text-lg font-bold text-foreground">
-                    {formatPKR(booking.costPrice)}
+                    {formatINR(booking.costPrice)}
                   </p>
                 </div>
                 <div className="rounded-lg bg-accent p-4">
@@ -209,7 +209,7 @@ export function BookingDetailPage() {
                     Selling Price
                   </p>
                   <p className="text-lg font-bold text-foreground">
-                    {formatPKR(booking.sellingPrice)}
+                    {formatINR(booking.sellingPrice)}
                   </p>
                 </div>
                 <div className="rounded-lg bg-emerald-500/10 p-4">
@@ -217,7 +217,7 @@ export function BookingDetailPage() {
                     Profit
                   </p>
                   <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
-                    {formatPKR(booking.profit)}
+                    {formatINR(booking.profit)}
                   </p>
                 </div>
               </div>

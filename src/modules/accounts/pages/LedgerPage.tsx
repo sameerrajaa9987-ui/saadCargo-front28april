@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ResourceListPage } from "@/modules/common/shared-crud/ResourceListPage";
 import { useLedger } from "@/modules/accounts/hooks/useLedger";
 import type { LedgerRow } from "@/modules/accounts/types";
-import { formatPKR, formatDate } from "@/shared/lib/utils";
+import { formatINR, formatDate } from "@/shared/lib/utils";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import {
   Select,
@@ -84,12 +84,12 @@ export function LedgerPage() {
         },
         {
           header: "Debit",
-          getValue: (item) => (item.debit > 0 ? formatPKR(item.debit) : "—"),
+          getValue: (item) => (item.debit > 0 ? formatINR(item.debit) : "—"),
           valueClassName: "text-right font-medium text-red-600",
         },
         {
           header: "Credit",
-          getValue: (item) => (item.credit > 0 ? formatPKR(item.credit) : "—"),
+          getValue: (item) => (item.credit > 0 ? formatINR(item.credit) : "—"),
           valueClassName: "text-right font-medium text-emerald-600",
         },
         {

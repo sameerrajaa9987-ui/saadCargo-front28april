@@ -11,7 +11,7 @@ import type {
   BookingType,
   ParcelType,
 } from "@/modules/booking/types";
-import { formatPKR } from "@/shared/lib/utils";
+import { formatINR } from "@/shared/lib/utils";
 import { Input, Textarea } from "@/shared/components/FormFields";
 import {
   Select as ShadcnSelect,
@@ -273,7 +273,7 @@ export function BookingDialog({
                 Auto-calculated Profit:{" "}
               </span>
               <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                {formatPKR(Number(form.sellingPrice) - Number(form.costPrice))}
+                {formatINR(Number(form.sellingPrice) - Number(form.costPrice))}
               </span>
             </div>
           )}

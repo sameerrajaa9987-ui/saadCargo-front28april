@@ -6,7 +6,7 @@ import {
 } from "@/modules/payment/hooks/usePayments";
 import { PaymentDialog } from "@/modules/payment/components/PaymentDialog";
 import type { PaymentRow, PaymentType } from "@/modules/payment/types";
-import { formatPKR, formatDate } from "@/shared/lib/utils";
+import { formatINR, formatDate } from "@/shared/lib/utils";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { useAppSelector } from "@/app/hooks";
 import { Input } from "@/components/ui/input";
@@ -103,7 +103,7 @@ export function PaymentsPage() {
         },
         {
           header: "Amount",
-          getValue: (item) => formatPKR(item.amount),
+          getValue: (item) => formatINR(item.amount),
           valueClassName: "text-right font-semibold",
         },
         {

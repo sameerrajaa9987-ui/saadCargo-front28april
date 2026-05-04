@@ -5,7 +5,7 @@ import {
 } from "@/modules/railway-booking/hooks/useRailwayBookings";
 import { RailwayBookingDialog } from "@/modules/railway-booking/components/RailwayBookingDialog";
 import type { RailwayBookingRow } from "@/modules/railway-booking/types";
-import { formatPKR, formatDate } from "@/shared/lib/utils";
+import { formatINR, formatDate } from "@/shared/lib/utils";
 import { useAppSelector } from "@/app/hooks";
 
 type RailwayBookingQuery = {
@@ -50,7 +50,7 @@ export function RailwayBookingsPage() {
         },
         {
           header: "Cost Paid",
-          getValue: (item) => formatPKR(item.costPaid),
+          getValue: (item) => formatINR(item.costPaid),
           valueClassName: "text-right font-medium",
         },
         {

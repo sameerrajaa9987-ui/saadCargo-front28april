@@ -11,7 +11,7 @@ import type {
   BookingStatus,
   PaymentStatus,
 } from "@/modules/booking/types";
-import { formatPKR, formatDate } from "@/shared/lib/utils";
+import { formatINR, formatDate } from "@/shared/lib/utils";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { useAppSelector } from "@/app/hooks";
 import { Input } from "@/components/ui/input";
@@ -161,12 +161,12 @@ export function BookingsPage() {
         },
         {
           header: "Selling",
-          getValue: (item) => formatPKR(item.sellingPrice),
+          getValue: (item) => formatINR(item.sellingPrice),
           valueClassName: "text-right font-medium",
         },
         {
           header: "Profit",
-          getValue: (item) => formatPKR(item.profit),
+          getValue: (item) => formatINR(item.profit),
           valueClassName: (item) =>
             item.profit > 0
               ? "text-right font-medium text-emerald-600 dark:text-emerald-400"

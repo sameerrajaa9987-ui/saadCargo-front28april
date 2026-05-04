@@ -1,5 +1,5 @@
 import { useOutstanding } from "@/modules/accounts/hooks/useLedger";
-import { formatPKR } from "@/shared/lib/utils";
+import { formatINR } from "@/shared/lib/utils";
 import { AlertTriangle } from "lucide-react";
 import {
   Table,
@@ -51,7 +51,7 @@ export function OutstandingPage() {
           <AlertTriangle className="h-5 w-5 text-amber-600" />
           <div>
             <p className="font-semibold text-amber-800 dark:text-amber-300">
-              Total Outstanding: {formatPKR(total)}
+              Total Outstanding: {formatINR(total)}
             </p>
             <p className="text-sm text-amber-600">
               {clients.length} clients with pending balances
@@ -88,7 +88,7 @@ export function OutstandingPage() {
                   <TableCell>{c.phone || "—"}</TableCell>
                   <TableCell>{c.email || "—"}</TableCell>
                   <TableCell className="text-right font-bold text-amber-600">
-                    {formatPKR(c.outstandingBalance)}
+                    {formatINR(c.outstandingBalance)}
                   </TableCell>
                 </TableRow>
               ))

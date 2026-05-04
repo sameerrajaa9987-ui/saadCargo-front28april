@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/shared/components/FormFields";
 import { Package, CreditCard, Plus, DollarSign } from "lucide-react";
-import { formatPKR } from "@/shared/lib/utils";
+import { formatINR } from "@/shared/lib/utils";
 import type { BookingRow } from "@/shared/types";
 
 export function DailyEntryPage() {
@@ -296,7 +296,7 @@ function QuickBookingForm() {
                     : "text-foreground"
               }`}
             >
-              {formatPKR(Number(form.sellingPrice) - Number(form.costPrice))}
+              {formatINR(Number(form.sellingPrice) - Number(form.costPrice))}
             </span>
           </div>
         )}
@@ -355,7 +355,7 @@ function QuickBookingForm() {
                       {b.sourceStation} → {b.destinationStation}
                     </td>
                     <td className="px-4 py-2 text-right font-medium">
-                      {formatPKR(b.sellingPrice)}
+                      {formatINR(b.sellingPrice)}
                     </td>
                   </tr>
                 ))}
@@ -762,7 +762,7 @@ function QuickPaymentForm() {
               </div>
               <div className="text-right">
                 <div className="font-medium text-foreground">
-                  {formatPKR(b.sellingPrice)}
+                  {formatINR(b.sellingPrice)}
                 </div>
                 <div className="text-xs text-muted-foreground">
                   Status: {b.paymentStatus}

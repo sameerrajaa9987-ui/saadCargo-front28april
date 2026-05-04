@@ -3,7 +3,7 @@ import { ledgerApi } from "@/modules/accounts/api/ledgerApi";
 import { bookingApi } from "@/modules/booking/api/bookingApi";
 import { paymentApi } from "@/modules/payment/api/paymentApi";
 import { inventoryApi } from "@/modules/inventory/api/inventoryApi";
-import { formatPKR, formatDate } from "@/shared/lib/utils";
+import { formatINR, formatDate } from "@/shared/lib/utils";
 import { toast } from "@/shared/lib/toast";
 import {
   Printer,
@@ -282,8 +282,8 @@ function LedgerReportContent({ data }: { data: LedgerRow[] }) {
             <th className="px-4 py-2 text-left font-medium">Date</th>
             <th className="px-4 py-2 text-left font-medium">Description</th>
             <th className="px-4 py-2 text-left font-medium">Account</th>
-            <th className="px-4 py-2 text-right font-medium">Debit (₨)</th>
-            <th className="px-4 py-2 text-right font-medium">Credit (₨)</th>
+            <th className="px-4 py-2 text-right font-medium">Debit (₹)</th>
+            <th className="px-4 py-2 text-right font-medium">Credit (₹)</th>
           </tr>
         </thead>
         <tbody>
@@ -293,10 +293,10 @@ function LedgerReportContent({ data }: { data: LedgerRow[] }) {
               <td className="px-4 py-2">{row.description}</td>
               <td className="px-4 py-2">{row.accountType}</td>
               <td className="px-4 py-2 text-right">
-                {row.debit > 0 ? formatPKR(row.debit) : "—"}
+                {row.debit > 0 ? formatINR(row.debit) : "—"}
               </td>
               <td className="px-4 py-2 text-right">
-                {row.credit > 0 ? formatPKR(row.credit) : "—"}
+                {row.credit > 0 ? formatINR(row.credit) : "—"}
               </td>
             </tr>
           ))}
@@ -304,8 +304,8 @@ function LedgerReportContent({ data }: { data: LedgerRow[] }) {
             <td className="px-4 py-2" colSpan={3}>
               Totals
             </td>
-            <td className="px-4 py-2 text-right">{formatPKR(totalDebit)}</td>
-            <td className="px-4 py-2 text-right">{formatPKR(totalCredit)}</td>
+            <td className="px-4 py-2 text-right">{formatINR(totalDebit)}</td>
+            <td className="px-4 py-2 text-right">{formatINR(totalCredit)}</td>
           </tr>
         </tbody>
       </table>
@@ -323,7 +323,7 @@ function ProfitLossReportContent({ data }: { data: PnlData }) {
         <h3 className="font-semibold text-lg">Revenue</h3>
         <div className="rounded-lg bg-accent p-4">
           <p className="text-sm text-muted-foreground">Total Revenue</p>
-          <p className="text-2xl font-bold">{formatPKR(totalRevenue)}</p>
+          <p className="text-2xl font-bold">{formatINR(totalRevenue)}</p>
         </div>
       </div>
 
@@ -331,11 +331,11 @@ function ProfitLossReportContent({ data }: { data: PnlData }) {
         <h3 className="font-semibold text-lg">Costs</h3>
         <div className="flex justify-between rounded-lg bg-accent px-4 py-3">
           <span className="text-sm">Direct Cost</span>
-          <span className="font-medium">{formatPKR(data.cost)}</span>
+          <span className="font-medium">{formatINR(data.cost)}</span>
         </div>
         <div className="flex justify-between rounded-lg bg-accent px-4 py-3">
           <span className="text-sm">Operating Expenses</span>
-          <span className="font-medium">{formatPKR(data.expenses)}</span>
+          <span className="font-medium">{formatINR(data.expenses)}</span>
         </div>
       </div>
 
@@ -344,7 +344,7 @@ function ProfitLossReportContent({ data }: { data: PnlData }) {
         <p
           className={`text-3xl font-bold ${netProfit >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}
         >
-          {formatPKR(netProfit)}
+          {formatINR(netProfit)}
         </p>
       </div>
     </div>
@@ -361,14 +361,14 @@ function BalanceSheetReportContent({ data }: { data: BalanceSheetData }) {
         <div className="space-y-2">
           <div className="flex justify-between">
             <span className="text-sm text-muted-foreground">Cash</span>
-            <span className="font-medium">{formatPKR(data.assets.cash)}</span>
+            <span className="font-medium">{formatINR(data.assets.cash)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-sm text-muted-foreground">
               Accounts Receivable
             </span>
             <span className="font-medium">
-              {formatPKR(data.assets.accountsReceivable)}
+              {formatINR(data.assets.accountsReceivable)}
             </span>
           </div>
           <div className="flex justify-between">
@@ -376,12 +376,12 @@ function BalanceSheetReportContent({ data }: { data: BalanceSheetData }) {
               Inventory Value
             </span>
             <span className="font-medium">
-              {formatPKR(data.assets.inventoryValue)}
+              {formatINR(data.assets.inventoryValue)}
             </span>
           </div>
           <div className="flex justify-between border-t border-border pt-2 font-semibold">
             <span>Total Assets</span>
-            <span>{formatPKR(data.assets.total)}</span>
+            <span>{formatINR(data.assets.total)}</span>
           </div>
         </div>
       </div>
@@ -396,19 +396,19 @@ function BalanceSheetReportContent({ data }: { data: BalanceSheetData }) {
               Accounts Payable
             </span>
             <span className="font-medium">
-              {formatPKR(data.liabilities.accountsPayable)}
+              {formatINR(data.liabilities.accountsPayable)}
             </span>
           </div>
           <div className="flex justify-between border-t border-border pt-2 font-semibold">
             <span>Total Liabilities</span>
-            <span>{formatPKR(data.liabilities.total)}</span>
+            <span>{formatINR(data.liabilities.total)}</span>
           </div>
         </div>
 
         <div className="rounded-lg bg-primary/10 p-4 text-center">
           <p className="text-sm text-muted-foreground">NET WORTH</p>
           <p className="text-2xl font-bold text-primary">
-            {formatPKR(data.netWorth)}
+            {formatINR(data.netWorth)}
           </p>
         </div>
       </div>
@@ -438,7 +438,7 @@ function OutstandingReportContent({ data }: { data: OutstandingRow[] }) {
             <td
               className={`px-4 py-2 font-semibold ${row.totalOutstanding > 0 ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"}`}
             >
-              {formatPKR(row.totalOutstanding)}
+              {formatINR(row.totalOutstanding)}
             </td>
             <td className="px-4 py-2">
               {row.lastPaymentDate ? formatDate(row.lastPaymentDate) : "—"}
@@ -492,7 +492,7 @@ function ShipmentReportContent({ data }: { data: BookingRow[] }) {
               </td>
               <td className="px-4 py-2">{row.status}</td>
               <td className="px-4 py-2 text-right">
-                {formatPKR(row.sellingPrice)}
+                {formatINR(row.sellingPrice)}
               </td>
             </tr>
           ))}
@@ -576,19 +576,19 @@ function PaymentReportContent({ data }: { data: PaymentRow[] }) {
         <div className="rounded-lg bg-emerald-500/10 p-4 text-center">
           <p className="text-sm text-muted-foreground">Total Received</p>
           <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-            {formatPKR(totalReceived)}
+            {formatINR(totalReceived)}
           </p>
         </div>
         <div className="rounded-lg bg-red-500/10 p-4 text-center">
           <p className="text-sm text-muted-foreground">Total Paid</p>
           <p className="text-2xl font-bold text-red-600 dark:text-red-400">
-            {formatPKR(totalPaid)}
+            {formatINR(totalPaid)}
           </p>
         </div>
         <div className="rounded-lg bg-orange-500/10 p-4 text-center">
           <p className="text-sm text-muted-foreground">Total Expenses</p>
           <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-            {formatPKR(totalExpense)}
+            {formatINR(totalExpense)}
           </p>
         </div>
         <div className="rounded-lg bg-blue-500/10 p-4 text-center">
@@ -596,7 +596,7 @@ function PaymentReportContent({ data }: { data: PaymentRow[] }) {
           <p
             className={`text-2xl font-bold ${netCash >= 0 ? "text-blue-600 dark:text-blue-400" : "text-red-600 dark:text-red-400"}`}
           >
-            {formatPKR(netCash)}
+            {formatINR(netCash)}
           </p>
         </div>
       </div>
@@ -621,7 +621,7 @@ function PaymentReportContent({ data }: { data: PaymentRow[] }) {
               <td
                 className={`px-4 py-2 text-right font-medium ${row.type === "received" ? "text-emerald-600 dark:text-emerald-400" : row.type === "expense" ? "text-orange-600 dark:text-orange-400" : "text-red-600 dark:text-red-400"}`}
               >
-                {formatPKR(row.amount)}
+                {formatINR(row.amount)}
               </td>
               <td className="px-4 py-2">{row.mode}</td>
               <td className="px-4 py-2">{row.referenceNumber || "—"}</td>

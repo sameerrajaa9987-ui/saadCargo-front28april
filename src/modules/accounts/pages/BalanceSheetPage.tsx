@@ -1,5 +1,5 @@
 import { useBalanceSheet } from "@/modules/accounts/hooks/useLedger";
-import { formatPKR } from "@/shared/lib/utils";
+import { formatINR } from "@/shared/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import type { BalanceSheetData } from "@/modules/accounts/types";
 
@@ -35,26 +35,26 @@ export function BalanceSheetPage() {
               <div className="flex justify-between text-sm">
                 <span>Cash & Bank</span>
                 <span className="font-medium">
-                  {formatPKR(data.assets.cash)}
+                  {formatINR(data.assets.cash)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span>Accounts Receivable</span>
                 <span className="font-medium">
-                  {formatPKR(data.assets.accountsReceivable)}
+                  {formatINR(data.assets.accountsReceivable)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span>Inventory (items)</span>
                 <span className="font-medium">
-                  {formatPKR(data.assets.inventoryValue)}
+                  {formatINR(data.assets.inventoryValue)}
                 </span>
               </div>
               <hr className="border-border" />
               <div className="flex justify-between text-sm font-bold">
                 <span>Total Assets</span>
                 <span className="text-emerald-600">
-                  {formatPKR(data.assets.total)}
+                  {formatINR(data.assets.total)}
                 </span>
               </div>
             </div>
@@ -70,14 +70,14 @@ export function BalanceSheetPage() {
               <div className="flex justify-between text-sm">
                 <span>Accounts Payable (Railway)</span>
                 <span className="font-medium">
-                  {formatPKR(data.liabilities.accountsPayable)}
+                  {formatINR(data.liabilities.accountsPayable)}
                 </span>
               </div>
               <hr className="border-border" />
               <div className="flex justify-between text-sm font-bold">
                 <span>Total Liabilities</span>
                 <span className="text-red-600">
-                  {formatPKR(data.liabilities.total)}
+                  {formatINR(data.liabilities.total)}
                 </span>
               </div>
             </div>
@@ -89,7 +89,7 @@ export function BalanceSheetPage() {
                     data.netWorth >= 0 ? "text-emerald-600" : "text-red-600"
                   }
                 >
-                  {formatPKR(data.netWorth)}
+                  {formatINR(data.netWorth)}
                 </span>
               </div>
             </div>
