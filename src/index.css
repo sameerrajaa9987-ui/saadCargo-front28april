@@ -1,104 +1,102 @@
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html,
-body,
-#root {
-  height: 100%;
-}
-
-body {
-  @apply bg-background text-foreground antialiased;
-}
-
-/* Dense ERP defaults */
-.erp-page {
-  @apply space-y-4;
-}
+/* ─── Saad Cargo CRM palette ───────────────────────────────────────────────
+   Mirrors the saad-cargo-landing brand:
+     navy anchor (#0E1A2D / #15243C / #1F3050)
+     cream paper (#F4F1EA / #E8E3D5)
+     saffron accent (#FF7733 dark / #E55A14 light)
+   Variables stay in HSL so shadcn-style tokens (primary, accent, etc.)
+   keep working unchanged.
+─────────────────────────────────────────────────────────────────────────── */
 
 @layer base {
-  .theme {
-    --font-heading: var(--font-sans);
-    --font-sans: "Geist Variable", sans-serif;
+  :root,
+  .light {
+    --background: 42 37% 94%;          /* cream — manifest paper */
+    --foreground: 222 36% 15%;         /* navy ink */
+    --card: 42 30% 98%;                /* near-white surface */
+    --card-foreground: 222 36% 15%;
+    --popover: 42 30% 98%;
+    --popover-foreground: 222 36% 15%;
+
+    --primary: 19 84% 49%;             /* saffron deep — accessible on cream */
+    --primary-foreground: 42 37% 94%;
+
+    --secondary: 42 32% 87%;
+    --secondary-foreground: 222 36% 15%;
+
+    --muted: 42 32% 87%;
+    --muted-foreground: 220 14% 41%;
+
+    --accent: 19 84% 49%;
+    --accent-foreground: 42 37% 94%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 42 37% 94%;
+
+    --border: 42 22% 80%;
+    --input: 42 22% 80%;
+    --ring: 19 84% 49%;
+    --radius: 0.5rem;
+
+    /* Sidebar — always navy regardless of theme, for brand continuity */
+    --sidebar: 217 53% 12%;
+    --sidebar-foreground: 211 45% 93%;
+    --sidebar-primary: 19 100% 60%;
+    --sidebar-primary-foreground: 217 53% 12%;
+    --sidebar-accent: 218 49% 16%;
+    --sidebar-accent-foreground: 211 45% 93%;
+    --sidebar-border: 218 44% 22%;
+    --sidebar-ring: 19 100% 60%;
   }
-  :root {
-    --background: oklch(0.975 0.003 240);
-    --foreground: oklch(0.27 0.02 252);
-    --card: oklch(0.995 0.002 240);
-    --card-foreground: oklch(0.27 0.02 252);
-    --popover: oklch(0.995 0.002 240);
-    --popover-foreground: oklch(0.27 0.02 252);
-    --primary: oklch(0.65 0.15 45);
-    --primary-foreground: oklch(0.98 0.002 250);
-    --secondary: oklch(0.94 0.008 240);
-    --secondary-foreground: oklch(0.3 0.02 252);
-    --muted: oklch(0.955 0.006 240);
-    --muted-foreground: oklch(0.48 0.015 245);
-    --accent: oklch(0.93 0.01 235);
-    --accent-foreground: oklch(0.32 0.02 252);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.88 0.006 238);
-    --input: oklch(0.9 0.006 238);
-    --ring: oklch(0.65 0.12 45);
-    --chart-1: oklch(0.65 0.15 45);
-    --chart-2: oklch(0.58 0.05 195);
-    --chart-3: oklch(0.63 0.07 80);
-    --chart-4: oklch(0.58 0.07 30);
-    --chart-5: oklch(0.53 0.05 300);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.3 0.035 252);
-    --sidebar-foreground: oklch(0.95 0.006 240);
-    --sidebar-primary: oklch(0.65 0.12 45);
-    --sidebar-primary-foreground: oklch(0.98 0.002 250);
-    --sidebar-accent: oklch(0.36 0.03 252);
-    --sidebar-accent-foreground: oklch(0.97 0.003 250);
-    --sidebar-border: oklch(0.39 0.02 252);
-    --sidebar-ring: oklch(0.65 0.12 45);
-  }
+
   .dark {
-    --background: oklch(0.17 0.01 255);
-    --foreground: oklch(0.96 0.005 250);
-    --card: oklch(0.21 0.01 252);
-    --card-foreground: oklch(0.96 0.005 250);
-    --popover: oklch(0.21 0.01 252);
-    --popover-foreground: oklch(0.96 0.005 250);
-    --primary: oklch(0.75 0.15 45);
-    --primary-foreground: oklch(0.2 0.01 252);
-    --secondary: oklch(0.27 0.012 252);
-    --secondary-foreground: oklch(0.96 0.005 250);
-    --muted: oklch(0.255 0.01 252);
-    --muted-foreground: oklch(0.75 0.01 250);
-    --accent: oklch(0.255 0.01 252);
-    --accent-foreground: oklch(0.96 0.005 250);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(0.32 0.01 252 / 45%);
-    --input: oklch(0.32 0.01 252 / 55%);
-    --ring: oklch(0.75 0.12 45);
-    --chart-1: oklch(0.75 0.15 45);
-    --chart-2: oklch(0.67 0.02 220);
-    --chart-3: oklch(0.58 0.02 80);
-    --chart-4: oklch(0.58 0.03 25);
-    --chart-5: oklch(0.62 0.02 300);
-    --sidebar: oklch(0.145 0.012 255);
-    --sidebar-foreground: oklch(0.955 0.005 250);
-    --sidebar-primary: oklch(0.75 0.12 45);
-    --sidebar-primary-foreground: oklch(0.985 0.002 250);
-    --sidebar-accent: oklch(0.24 0.012 252);
-    --sidebar-accent-foreground: oklch(0.965 0.004 250);
-    --sidebar-border: oklch(0.3 0.01 252 / 45%);
-    --sidebar-ring: oklch(0.75 0.12 45);
+    --background: 217 53% 12%;          /* page navy */
+    --foreground: 211 45% 93%;          /* cool ink */
+    --card: 218 49% 16%;                /* page-2 surface */
+    --card-foreground: 211 45% 93%;
+    --popover: 218 49% 16%;
+    --popover-foreground: 211 45% 93%;
+
+    --primary: 19 100% 60%;             /* saffron — pops on navy */
+    --primary-foreground: 217 53% 12%;
+
+    --secondary: 218 44% 22%;
+    --secondary-foreground: 211 45% 93%;
+
+    --muted: 218 44% 22%;
+    --muted-foreground: 215 19% 65%;
+
+    --accent: 19 100% 60%;
+    --accent-foreground: 217 53% 12%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 211 45% 93%;
+
+    --border: 218 35% 26%;
+    --input: 218 35% 26%;
+    --ring: 19 100% 60%;
+
+    --sidebar: 218 56% 8%;              /* deeper than page for separation */
+    --sidebar-foreground: 211 45% 93%;
+    --sidebar-primary: 19 100% 60%;
+    --sidebar-primary-foreground: 217 53% 12%;
+    --sidebar-accent: 218 49% 14%;
+    --sidebar-accent-foreground: 211 45% 93%;
+    --sidebar-border: 218 35% 18%;
+    --sidebar-ring: 19 100% 60%;
   }
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
+
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground antialiased; }
+  html { font-family: Inter, system-ui, sans-serif; }
 }
+
+html, body, #root { height: 100%; }
+
+.erp-page { @apply space-y-4; }
+
+/* Smooth theme transitions */
+html { transition: background-color 240ms ease, color 240ms ease; }

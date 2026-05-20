@@ -1,62 +1,57 @@
 import { useNavigate } from "react-router-dom";
-import { LogOut, Moon, Sun } from "lucide-react";
+import { LogOut, Menu, Moon, Sun, UserCircle2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { clearAuth } from "@/modules/auth/authSlice";
-import { useEffect, useState } from "react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
+import { useTheme } from "@/app/theme";
+import { useSidebar } from "./sidebarContext";
 
 export function Topbar() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((s) => s.auth.user);
-  const [dark, setDark] = useState(() =>
-    document.documentElement.classList.contains("dark"),
-  );
-
-  useEffect(() => {
-    if (dark) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [dark]);
-
-  function handleLogout() {
-    dispatch(clearAuth());
-    navigate("/login", { replace: true });
-  }
+  const { theme, toggleTheme } = useTheme();
+  const { toggle: toggleSidebar, open: sidebarOpen } = useSidebar();
+  const isDark = theme === "dark";
 
   return (
-    <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-border bg-card/95 px-6 backdrop-blur-sm">
-      <div className="flex items-center gap-4">
-        <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
-        <div className="text-lg font-semibold text-foreground">
-          Saad Cargo Services
-        </div>
-      </div>
-
-      <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-10 border-b border-border bg-card/95 backdrop-blur">
+      <div className="flex h-14 items-center gap-3 px-4">
         <button
-          onClick={() => setDark(!dark)}
-          className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          type="button"
+          onClick={toggleSidebar}
+          aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+          aria-expanded={sidebarOpen}
+          title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
         >
-          {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          <Menu className="h-4 w-4" />
         </button>
 
-        <div className="hidden text-right sm:block">
-          <div className="text-sm font-medium text-foreground">
-            {user?.name}
-          </div>
-          <div className="text-xs capitalize text-muted-foreground">
-            {user?.role}
-          </div>
-        </div>
+        <div className="flex-1" />
 
-        <Button variant="outline" size="sm" onClick={handleLogout}>
-          <LogOut className="h-4 w-4 mr-2" />
-          <span className="hidden sm:inline">Logout</span>
-        </Button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+          >
+            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+          <div className="hidden sm:block text-right">
+            <div className="text-sm font-semibold text-foreground">{user?.name || "User"}</div>
+            <div className="text-xs text-muted-foreground capitalize">{user?.role || ""}</div>
+          </div>
+          <UserCircle2 className="h-8 w-8 text-primary/70" />
+          <button
+            onClick={() => { dispatch(clearAuth()); navigate("/login", { replace: true }); }}
+            className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="hidden sm:inline">Logout</span>
+          </button>
+        </div>
       </div>
     </header>
   );

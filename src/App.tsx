@@ -1,95 +1,23 @@
-import { Navigate, Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { AppLayout } from "./app/layouts/AppLayout";
 import { RequireAuth } from "./app/router/RequireAuth";
-import { RequireRole } from "./app/router/RequireRole";
 import { PageLoader } from "./shared/components/PageLoader";
 
-const LoginPage = lazy(() =>
-  import("./modules/auth/pages/LoginPage").then((m) => ({
-    default: m.LoginPage,
-  })),
-);
-const DashboardPage = lazy(() =>
-  import("./modules/dashboard/pages/DashboardPage").then((m) => ({
-    default: m.DashboardPage,
-  })),
-);
-const DailyEntryPage = lazy(() =>
-  import("./modules/daily-entry/pages/DailyEntryPage").then((m) => ({
-    default: m.DailyEntryPage,
-  })),
-);
-const BookingsPage = lazy(() =>
-  import("./modules/booking/pages/BookingsPage").then((m) => ({
-    default: m.BookingsPage,
-  })),
-);
-const BookingDetailPage = lazy(() =>
-  import("./modules/booking/pages/BookingDetailPage").then((m) => ({
-    default: m.BookingDetailPage,
-  })),
-);
-const PaymentsPage = lazy(() =>
-  import("./modules/payment/pages/PaymentsPage").then((m) => ({
-    default: m.PaymentsPage,
-  })),
-);
-const RailwayBookingsPage = lazy(() =>
-  import("./modules/railway-booking/pages/RailwayBookingsPage").then((m) => ({
-    default: m.RailwayBookingsPage,
-  })),
-);
-const WagonTrackingPage = lazy(() =>
-  import("./modules/wagon/pages/WagonTrackingPage").then((m) => ({
-    default: m.WagonTrackingPage,
-  })),
-);
-const InventoryPage = lazy(() =>
-  import("./modules/inventory/pages/InventoryPage").then((m) => ({
-    default: m.InventoryPage,
-  })),
-);
-const LedgerPage = lazy(() =>
-  import("./modules/accounts/pages/LedgerPage").then((m) => ({
-    default: m.LedgerPage,
-  })),
-);
-const ProfitLossPage = lazy(() =>
-  import("./modules/accounts/pages/ProfitLossPage").then((m) => ({
-    default: m.ProfitLossPage,
-  })),
-);
-const BalanceSheetPage = lazy(() =>
-  import("./modules/accounts/pages/BalanceSheetPage").then((m) => ({
-    default: m.BalanceSheetPage,
-  })),
-);
-const OutstandingPage = lazy(() =>
-  import("./modules/accounts/pages/OutstandingPage").then((m) => ({
-    default: m.OutstandingPage,
-  })),
-);
-const UsersPage = lazy(() =>
-  import("./modules/settings/pages/UsersPage").then((m) => ({
-    default: m.UsersPage,
-  })),
-);
-const ClientsPage = lazy(() =>
-  import("./modules/settings/pages/ClientsPage").then((m) => ({
-    default: m.ClientsPage,
-  })),
-);
-const ReportsPage = lazy(() =>
-  import("./modules/reports/pages/ReportsPage").then((m) => ({
-    default: m.ReportsPage,
-  })),
-);
-const AuditLogPage = lazy(() =>
-  import("./modules/audit-log/pages/AuditLogPage").then((m) => ({
-    default: m.AuditLogPage,
-  })),
-);
+const LoginPage = lazy(() => import("./modules/auth/pages/LoginPage").then((m) => ({ default: m.LoginPage })));
+const DashboardPage = lazy(() => import("./modules/dashboard/pages/DashboardPage").then((m) => ({ default: m.DashboardPage })));
+const PartyListPage = lazy(() => import("./modules/party/pages/PartyListPage").then((m) => ({ default: m.PartyListPage })));
+const ConsignmentListPage = lazy(() => import("./modules/consignment/pages/ConsignmentListPage").then((m) => ({ default: m.ConsignmentListPage })));
+const DailySummaryPage = lazy(() => import("./modules/consignment/pages/DailySummaryPage").then((m) => ({ default: m.DailySummaryPage })));
+const LoadingListPage = lazy(() => import("./modules/consignment/pages/LoadingListPage").then((m) => ({ default: m.LoadingListPage })));
+const PaymentListPage = lazy(() => import("./modules/payment/pages/PaymentListPage").then((m) => ({ default: m.PaymentListPage })));
+const InvoiceListPage = lazy(() => import("./modules/invoice/pages/InvoiceListPage").then((m) => ({ default: m.InvoiceListPage })));
+const PodListPage = lazy(() => import("./modules/pod/pages/PodListPage").then((m) => ({ default: m.PodListPage })));
+const DailyReportPage = lazy(() => import("./modules/reports/pages/DailyReportPage").then((m) => ({ default: m.DailyReportPage })));
+const OutstandingReportPage = lazy(() => import("./modules/reports/pages/OutstandingReportPage").then((m) => ({ default: m.OutstandingReportPage })));
+const StationReportPage = lazy(() => import("./modules/reports/pages/StationReportPage").then((m) => ({ default: m.StationReportPage })));
+const GstReportPage = lazy(() => import("./modules/reports/pages/GstReportPage").then((m) => ({ default: m.GstReportPage })));
+const SettingsPage = lazy(() => import("./modules/settings/pages/SettingsPage").then((m) => ({ default: m.SettingsPage })));
 
 export default function App() {
   return (
@@ -107,126 +35,18 @@ export default function App() {
         >
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<DashboardPage />} />
-          <Route
-            path="daily-entry"
-            element={
-              <RequireRole roles={["admin", "operator"]}>
-                <DailyEntryPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="bookings"
-            element={
-              <RequireRole roles={["admin", "operator", "accountant"]}>
-                <BookingsPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="bookings/:id"
-            element={
-              <RequireRole roles={["admin", "operator", "accountant"]}>
-                <BookingDetailPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="railway-bookings"
-            element={
-              <RequireRole roles={["admin", "operator", "accountant"]}>
-                <RailwayBookingsPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="wagon-tracking"
-            element={
-              <RequireRole roles={["admin", "operator", "accountant"]}>
-                <WagonTrackingPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="inventory"
-            element={
-              <RequireRole roles={["admin", "operator", "accountant"]}>
-                <InventoryPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="payments"
-            element={
-              <RequireRole roles={["admin", "operator", "accountant"]}>
-                <PaymentsPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="accounts/ledger"
-            element={
-              <RequireRole roles={["admin", "operator", "accountant"]}>
-                <LedgerPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="accounts/profit-loss"
-            element={
-              <RequireRole roles={["admin", "operator", "accountant"]}>
-                <ProfitLossPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="accounts/balance-sheet"
-            element={
-              <RequireRole roles={["admin", "operator", "accountant"]}>
-                <BalanceSheetPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="accounts/outstanding"
-            element={
-              <RequireRole roles={["admin", "operator", "accountant"]}>
-                <OutstandingPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="reports"
-            element={
-              <RequireRole roles={["admin", "operator", "accountant"]}>
-                <ReportsPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="audit-logs"
-            element={
-              <RequireRole roles={["admin"]}>
-                <AuditLogPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="settings/users"
-            element={
-              <RequireRole roles={["admin"]}>
-                <UsersPage />
-              </RequireRole>
-            }
-          />
-          <Route
-            path="settings/clients"
-            element={
-              <RequireRole roles={["admin"]}>
-                <ClientsPage />
-              </RequireRole>
-            }
-          />
+          <Route path="parties" element={<PartyListPage />} />
+          <Route path="consignments" element={<ConsignmentListPage />} />
+          <Route path="consignments/daily-summary" element={<DailySummaryPage />} />
+          <Route path="consignments/loading-list" element={<LoadingListPage />} />
+          <Route path="payments" element={<PaymentListPage />} />
+          <Route path="invoices" element={<InvoiceListPage />} />
+          <Route path="pods" element={<PodListPage />} />
+          <Route path="reports/daily" element={<DailyReportPage />} />
+          <Route path="reports/outstanding" element={<OutstandingReportPage />} />
+          <Route path="reports/station" element={<StationReportPage />} />
+          <Route path="reports/gst" element={<GstReportPage />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

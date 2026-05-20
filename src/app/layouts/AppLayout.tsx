@@ -2,21 +2,23 @@ import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "./sidebarContext";
 import { PageLoader } from "@/shared/components/PageLoader";
 
 export function AppLayout() {
   return (
     <SidebarProvider>
-      <Sidebar />
-      <SidebarInset className="min-w-0 bg-background/80">
-        <Topbar />
-        <main className="min-w-0 flex-1 p-4">
-          <Suspense fallback={<PageLoader />}>
-            <Outlet />
-          </Suspense>
-        </main>
-      </SidebarInset>
+      <div className="flex h-full">
+        <Sidebar />
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+          <Topbar />
+          <main className="flex-1 overflow-auto p-4 bg-background">
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </main>
+        </div>
+      </div>
     </SidebarProvider>
   );
 }

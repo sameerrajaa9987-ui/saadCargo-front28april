@@ -1,296 +1,116 @@
-import { useState, useEffect } from "react";
-import { ResourceDialog } from "@/modules/common/shared-crud/ResourceDialog";
-import {
-  useCreatePayment,
-  useUpdatePayment,
-} from "@/modules/payment/hooks/usePayments";
-import { clientApi } from "@/modules/settings/api/clientApi";
-import { bookingApi } from "@/modules/booking/api";
-import type {
-  PaymentRow,
-  PaymentType,
-  PaymentMode,
-  PaymentPayload,
-} from "@/modules/payment/types";
-import type { BookingRow } from "@/shared/types";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/shared/components/FormFields";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormDialog } from "@/modules/common/FormDialog";
+import { paymentSchema, type PaymentFormValues } from "../validations/payment.validation";
+import { useCreatePayment, useUpdatePayment } from "../hooks/usePayments";
+import { getApiErrorMessage } from "@/shared/api/http";
+import { toast } from "@/shared/lib/toast";
+import type { Payment } from "../types";
+import type { Party } from "@/modules/party/types";
+import { partyId as toPartyId } from "@/shared/lib/partyDisplay";
 
-interface PaymentDialogProps {
+const MODES = [
+  { value: "cash", label: "Cash" },
+  { value: "bank_transfer", label: "Bank Transfer" },
+  { value: "cheque", label: "Cheque" },
+  { value: "upi", label: "UPI" },
+  { value: "other", label: "Other" },
+];
+
+const inputCls = "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
+
+function Field({ label, error, required, children }: { label: string; error?: string; required?: boolean; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-muted-foreground mb-1">{label}{required && <span className="text-destructive ml-0.5">*</span>}</label>
+      {children}
+      {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
+    </div>
+  );
+}
+
+interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   mode: "create" | "edit";
-  value: PaymentRow | null;
+  value: Payment | null;
   onSuccess: () => void;
+  parties: Party[];
 }
 
-export function PaymentDialog({
-  open,
-  onOpenChange,
-  mode,
-  value,
-  onSuccess,
-}: PaymentDialogProps) {
-  const [clients, setClients] = useState<{ id: string; name: string }[]>([]);
-  const [bookings, setBookings] = useState<BookingRow[]>([]);
-  const [form, setForm] = useState({
-    type: "received" as PaymentType,
-    clientOrVendorName: "",
-    clientId: "",
-    amount: "",
-    mode: "cash" as PaymentMode,
-    date: new Date().toISOString().split("T")[0],
-    referenceNumber: "",
-    linkedBookingId: "",
-    notes: "",
+export function PaymentDialog({ open, onOpenChange, mode, value, onSuccess, parties }: Props) {
+  const createM = useCreatePayment();
+  const updateM = useUpdatePayment();
+  const isPending = createM.isPending || updateM.isPending;
+
+  const form = useForm<PaymentFormValues>({
+    resolver: zodResolver(paymentSchema),
+    defaultValues: { party: "", date: new Date().toISOString().split("T")[0], amount: 0, mode: "cash", referenceNumber: "", notes: "" },
   });
-
-  const createMutation = useCreatePayment();
-  const updateMutation = useUpdatePayment();
-
-  async function loadDropdowns() {
-    try {
-      const c = await clientApi.listAll();
-      setClients(c);
-    } catch {
-      // ignore
-    }
-    try {
-      const b = await bookingApi.list({ limit: 100 });
-      setBookings(b.items);
-    } catch {
-      // ignore
-    }
-  }
 
   useEffect(() => {
     if (open) {
-      (async () => {
-        await loadDropdowns();
-        if (mode === "edit" && value) {
-          setForm({
-            type: value.type,
-            clientOrVendorName: value.clientOrVendorName,
-            clientId: value.clientId || "",
-            amount: String(value.amount),
-            mode: value.mode,
-            date: value.date,
-            referenceNumber: value.referenceNumber || "",
-            linkedBookingId:
-              value.linkedBookingId || value.linkedBooking?.id || "",
-            notes: value.notes || "",
-          });
-        } else {
-          setForm({
-            type: "received",
-            clientOrVendorName: "",
-            clientId: "",
-            amount: "",
-            mode: "cash",
-            date: new Date().toISOString().split("T")[0],
-            referenceNumber: "",
-            linkedBookingId: "",
-            notes: "",
-          });
-        }
-      })();
+      if (mode === "edit" && value) {
+        form.reset({
+          party: toPartyId(value.party),
+          date: new Date(value.date).toISOString().split("T")[0],
+          amount: value.amount,
+          mode: value.mode,
+          referenceNumber: value.referenceNumber ?? "",
+          notes: value.notes ?? "",
+        });
+      } else {
+        form.reset({ party: "", date: new Date().toISOString().split("T")[0], amount: 0, mode: "cash", referenceNumber: "", notes: "" });
+      }
     }
-  }, [open, mode, value]);
+  }, [open, mode, value, form]);
 
-  async function customSubmit() {
-    const payload: PaymentPayload = {
-      type: form.type,
-      clientOrVendorName: form.clientOrVendorName,
-      clientId: form.clientId || undefined,
-      amount: Number(form.amount),
-      mode: form.mode,
-      date: form.date,
-      referenceNumber: form.referenceNumber || undefined,
-      linkedBookingId: form.linkedBookingId || undefined,
-      notes: form.notes || undefined,
-    };
+  const { errors } = form.formState;
 
-    if (mode === "create") {
-      await createMutation.mutateAsync(payload);
-    } else if (value?.id) {
-      await updateMutation.mutateAsync({ id: value.id, payload });
-    }
+  async function onSubmit(data: PaymentFormValues) {
+    try {
+      const payload = { ...data, referenceNumber: data.referenceNumber || undefined, notes: data.notes || undefined };
+      if (mode === "create") await createM.mutateAsync(payload);
+      else if (value) await updateM.mutateAsync({ id: value.id, payload });
+      toast.success(mode === "create" ? "Payment recorded" : "Payment updated");
+      onOpenChange(false);
+      onSuccess();
+    } catch (err) { toast.error(getApiErrorMessage(err)); }
   }
 
   return (
-    <ResourceDialog<PaymentRow, Record<string, unknown>, keyof PaymentRow>
-      open={open}
-      onOpenChange={onOpenChange}
-      mode={mode}
-      value={value}
-      onSuccess={onSuccess}
-      createTitle="Record Payment"
-      editTitle="Edit Payment"
-      dialogContentClassName="max-w-2xl"
-      customSubmit={customSubmit}
-      customIsPending={createMutation.isPending || updateMutation.isPending}
-      customDisableSubmit={!form.clientOrVendorName || !form.amount}
-      submitLabelCreate="Record Payment"
-      submitLabelEdit="Save"
-      renderBody={() => (
-        <div className="space-y-4 py-2">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">
-                Type *
-              </label>
-              <Select
-                value={form.type}
-                onValueChange={(value) =>
-                  setForm({ ...form, type: value as PaymentType })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="received">
-                    Received (Client Pays Us)
-                  </SelectItem>
-                  <SelectItem value="paid">
-                    Paid (We Pay Railway/Vendor)
-                  </SelectItem>
-                  <SelectItem value="expense">
-                    Expense (Operational Cost)
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">
-                Client / Vendor Name *
-              </label>
-              <Input
-                value={form.clientOrVendorName}
-                onChange={(e) =>
-                  setForm({ ...form, clientOrVendorName: e.target.value })
-                }
-                placeholder="Name"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">
-                Linked Client
-              </label>
-              <Select
-                value={form.clientId}
-                onValueChange={(value) => setForm({ ...form, clientId: value ?? "" })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select client" />
-                </SelectTrigger>
-                <SelectContent>
-                  {clients.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">
-                Linked Booking
-              </label>
-              <Select
-                value={form.linkedBookingId}
-                onValueChange={(value) =>
-                  setForm({ ...form, linkedBookingId: value ?? "" })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select booking" />
-                </SelectTrigger>
-                <SelectContent>
-                  {bookings.map((b) => (
-                    <SelectItem key={b.id} value={b.id}>
-                      {b.bookingId} — {b.client?.label || ""}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">
-                Amount (₨) *
-              </label>
-              <Input
-                type="number"
-                step="0.01"
-                min="0.01"
-                value={form.amount}
-                onChange={(e) => setForm({ ...form, amount: e.target.value })}
-                placeholder="Amount"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">
-                Mode *
-              </label>
-              <Select
-                value={form.mode}
-                onValueChange={(value) =>
-                  setForm({ ...form, mode: value as PaymentMode })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select mode" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="cash">Cash</SelectItem>
-                  <SelectItem value="bank">Bank Transfer</SelectItem>
-                  <SelectItem value="upi">UPI</SelectItem>
-                  <SelectItem value="cheque">Cheque</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">
-                Date *
-              </label>
-              <Input
-                type="date"
-                value={form.date}
-                onChange={(e) => setForm({ ...form, date: e.target.value })}
-              />
-            </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">
-                Reference Number
-              </label>
-              <Input
-                value={form.referenceNumber}
-                onChange={(e) =>
-                  setForm({ ...form, referenceNumber: e.target.value })
-                }
-                placeholder="Reference"
-              />
-            </div>
-          </div>
-          <div>
-            <label className="text-xs font-medium text-muted-foreground">
-              Notes
-            </label>
-            <Textarea
-              value={form.notes}
-              onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              placeholder="Notes"
-            />
-          </div>
+    <FormDialog open={open} onOpenChange={onOpenChange} title={mode === "create" ? "Record Payment" : "Edit Payment"}
+      onSubmit={form.handleSubmit(onSubmit)} isPending={isPending} submitLabel={mode === "create" ? "Record" : "Save"}>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="sm:col-span-2">
+          <Field label="Party" required error={errors.party?.message}>
+            <select className={`${inputCls} cursor-pointer`} {...form.register("party")}>
+              <option value="">Select party...</option>
+              {parties.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+            </select>
+          </Field>
         </div>
-      )}
-    />
+        <Field label="Date" required error={errors.date?.message}>
+          <input type="date" className={inputCls} {...form.register("date")} />
+        </Field>
+        <Field label="Amount (₹)" required error={errors.amount?.message}>
+          <input type="number" step="0.01" min={0} className={inputCls} {...form.register("amount")} />
+        </Field>
+        <Field label="Mode" required error={errors.mode?.message}>
+          <select className={`${inputCls} cursor-pointer`} {...form.register("mode")}>
+            {MODES.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
+          </select>
+        </Field>
+        <Field label="Reference / Cheque No." error={errors.referenceNumber?.message}>
+          <input className={inputCls} placeholder="UTR, cheque number..." {...form.register("referenceNumber")} />
+        </Field>
+        <div className="sm:col-span-2">
+          <Field label="Notes" error={errors.notes?.message}>
+            <input className={inputCls} {...form.register("notes")} />
+          </Field>
+        </div>
+      </div>
+    </FormDialog>
   );
 }

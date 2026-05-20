@@ -1,42 +1,51 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { useState } from "react";
-import { ChevronRight, Train } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronRight, X } from "lucide-react";
 import { MENU, type MenuItem } from "./menu";
-import { useAppSelector } from "@/app/hooks";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
-  Sidebar as UiSidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarRail,
-  SidebarFooter,
-} from "@/components/ui/sidebar";
+import { LogoMark } from "@/shared/components/Logo";
+import { useSidebar } from "./sidebarContext";
+import { cn } from "@/lib/utils";
 
+/**
+ * Responsive sidebar:
+ *   • md+ open      → 240px push column
+ *   • md+ closed    → 64px icon-only rail
+ *   • <md open      → fixed overlay drawer with scrim
+ *   • <md closed    → off-canvas (translate-x-[-100%])
+ *
+ * The collapsed-to-icons mode hides labels and chevrons; nested groups
+ * collapse to their parent icon, which becomes a NavLink to the first
+ * child (so a single click on Reports goes to Daily Report, etc.).
+ */
 export function Sidebar() {
   const location = useLocation();
-  const user = useAppSelector((s) => s.auth.user);
+  const { open, setOpen } = useSidebar();
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
-  const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
+  const [isDesktop, setIsDesktop] = useState<boolean>(() =>
+    typeof window === "undefined" ? true : window.matchMedia("(min-width: 768px)").matches
+  );
+
+  // Track viewport to know when to show overlay vs push-column
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 768px)");
+    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  // On mobile, auto-close on route change
+  useEffect(() => {
+    if (!isDesktop) setOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
+
+  const collapsed = isDesktop && !open;
+  const showOverlay = !isDesktop && open;
 
   const isPathActive = (path?: string) => {
     if (!path) return false;
     if (path === "/") return location.pathname === "/";
-    return (
-      location.pathname === path || location.pathname.startsWith(`${path}/`)
-    );
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };
 
   const isItemActive = (item: MenuItem): boolean => {
@@ -44,166 +53,161 @@ export function Sidebar() {
     return item.children?.some(isItemActive) ?? false;
   };
 
-  const filteredMenu = MENU.filter(
-    (item) => !item.roles || item.roles.includes(user?.role || "operator"),
-  );
+  function toggleSection(label: string) {
+    setOpenSections((prev) => ({ ...prev, [label]: !prev[label] }));
+  }
+
+  function renderItem(item: MenuItem, depth = 0) {
+    const active = isItemActive(item);
+    const sectionOpen = openSections[item.label] ?? active;
+
+    if (item.children?.length) {
+      // Collapsed: clicking the parent icon navigates to the first child route
+      if (collapsed) {
+        const firstChild = item.children.find((c) => c.to);
+        if (!firstChild?.to) return null;
+        return (
+          <NavLink
+            key={item.label}
+            to={firstChild.to}
+            title={item.label}
+            className={({ isActive }) =>
+              cn(
+                "flex items-center justify-center rounded-lg p-2 transition-colors",
+                isActive || active
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              )
+            }
+          >
+            {item.icon ? <item.icon className="h-5 w-5 shrink-0" /> : null}
+          </NavLink>
+        );
+      }
+
+      return (
+        <div key={item.label}>
+          <button
+            onClick={() => toggleSection(item.label)}
+            className={cn(
+              "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+              active && "text-sidebar-accent-foreground",
+              depth > 0 && "pl-8 text-xs"
+            )}
+          >
+            {item.icon && <item.icon className="h-4 w-4 shrink-0" />}
+            <span className="flex-1 text-left">{item.label}</span>
+            <ChevronRight
+              className={cn("h-3.5 w-3.5 transition-transform", sectionOpen && "rotate-90")}
+            />
+          </button>
+          {sectionOpen && (
+            <div className="ml-2 mt-0.5 space-y-0.5 border-l border-sidebar-border pl-2">
+              {item.children.map((child) => renderItem(child, depth + 1))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (!item.to) return null;
+
+    // Collapsed leaf
+    if (collapsed) {
+      return (
+        <NavLink
+          key={item.label}
+          to={item.to}
+          title={item.label}
+          end
+          className={({ isActive }) =>
+            cn(
+              "flex items-center justify-center rounded-lg p-2 transition-colors",
+              isActive
+                ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            )
+          }
+        >
+          {item.icon ? <item.icon className="h-5 w-5 shrink-0" /> : null}
+        </NavLink>
+      );
+    }
+
+    return (
+      <NavLink
+        key={item.label}
+        to={item.to}
+        end
+        className={({ isActive }) =>
+          cn(
+            "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+            isActive
+              ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+              : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+            depth > 0 && "py-1.5 text-xs"
+          )
+        }
+      >
+        {item.icon && <item.icon className="h-4 w-4 shrink-0" />}
+        <span>{item.label}</span>
+      </NavLink>
+    );
+  }
 
   return (
-    <UiSidebar collapsible="offcanvas">
-      <SidebarHeader className="border-b border-sidebar-border bg-sidebar-primary text-sidebar-primary-foreground">
-        <div className="flex h-10 items-center gap-3 px-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-orange-600 to-amber-600 text-white">
-            <Train className="h-4 w-4" />
-          </div>
-          <div className="flex flex-col">
-            <div className="text-sm font-semibold">Saad Cargo</div>
-            <div className="text-xs text-sidebar-primary-foreground/70">
-              Railway ERP
+    <>
+      {/* Mobile scrim */}
+      {showOverlay && (
+        <button
+          aria-label="Close menu"
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm md:hidden"
+        />
+      )}
+
+      <aside
+        className={cn(
+          "flex flex-col bg-sidebar text-sidebar-foreground transition-[width,transform] duration-200 ease-out",
+          // Desktop sizing
+          "md:relative md:h-full md:translate-x-0",
+          isDesktop ? (open ? "md:w-60" : "md:w-16") : "md:w-60",
+          // Mobile drawer
+          "fixed inset-y-0 left-0 z-40 w-60 md:z-auto",
+          !isDesktop && (open ? "translate-x-0 shadow-2xl" : "-translate-x-full")
+        )}
+      >
+        <div
+          className={cn(
+            "flex h-14 items-center border-b border-sidebar-border",
+            collapsed ? "justify-center px-2" : "gap-2.5 px-4"
+          )}
+        >
+          <LogoMark size={collapsed ? 36 : 32} />
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-bold text-sidebar-foreground truncate">Saad Cargo</div>
+              <div className="text-xs text-sidebar-foreground/50 truncate">Mumbai CRM</div>
             </div>
-          </div>
+          )}
+          {/* Mobile-only close button inside the drawer */}
+          {showOverlay && (
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+              className="rounded-md p-1 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground md:hidden"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
-      </SidebarHeader>
 
-      <SidebarContent>
-        {filteredMenu.map((section) => {
-          const children = section.children ?? [];
-          const hasChildren = children.length > 0;
-          const sectionIsActive = isItemActive(section);
-
-          if (hasChildren) {
-            const isOpen = openSections[section.label] ?? sectionIsActive;
-
-            return (
-              <Collapsible
-                key={section.label}
-                open={isOpen}
-                onOpenChange={(open) =>
-                  setOpenSections((prev) => ({
-                    ...prev,
-                    [section.label]: open,
-                  }))
-                }
-                className="group/collapsible"
-              >
-                <SidebarGroup>
-                  <SidebarGroupLabel className="p-0">
-                    <CollapsibleTrigger className="flex h-8 w-full items-center gap-2 rounded-md px-2 text-left hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-                      {section.icon ? (
-                        <section.icon className="h-4 w-4" />
-                      ) : null}
-                      <span>{section.label}</span>
-                      <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                    </CollapsibleTrigger>
-                  </SidebarGroupLabel>
-
-                  <CollapsibleContent>
-                    <SidebarGroupContent>
-                      <SidebarMenu>
-                        {children.map((item) => (
-                          <SidebarMenuItem key={item.label}>
-                            {item.children?.length ? (
-                              <Collapsible
-                                open={
-                                  openSubmenus[item.label] ?? isItemActive(item)
-                                }
-                                onOpenChange={(open) =>
-                                  setOpenSubmenus((prev) => ({
-                                    ...prev,
-                                    [item.label]: open,
-                                  }))
-                                }
-                                className="group/submenu"
-                              >
-                                <CollapsibleTrigger className="w-full">
-                                  <SidebarMenuButton
-                                    isActive={isItemActive(item)}
-                                    tooltip={item.label}
-                                    render={<div />}
-                                  >
-                                    {item.icon ? (
-                                      <item.icon className="h-4 w-4" />
-                                    ) : null}
-                                    <span>{item.label}</span>
-                                    <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/submenu:rotate-90" />
-                                  </SidebarMenuButton>
-                                </CollapsibleTrigger>
-
-                                <CollapsibleContent>
-                                  <SidebarMenuSub>
-                                    {item.children
-                                      .filter((child) => child.to)
-                                      .map((child) => (
-                                        <SidebarMenuSubItem
-                                          key={`${item.label}-${child.label}`}
-                                        >
-                                          <SidebarMenuSubButton
-                                            render={
-                                              <NavLink to={child.to!} end />
-                                            }
-                                            isActive={isPathActive(child.to)}
-                                          >
-                                            <span>{child.label}</span>
-                                          </SidebarMenuSubButton>
-                                        </SidebarMenuSubItem>
-                                      ))}
-                                  </SidebarMenuSub>
-                                </CollapsibleContent>
-                              </Collapsible>
-                            ) : item.to ? (
-                              <SidebarMenuButton
-                                render={<NavLink to={item.to} end />}
-                                isActive={isPathActive(item.to)}
-                                tooltip={item.label}
-                              >
-                                {item.icon ? (
-                                  <item.icon className="h-4 w-4" />
-                                ) : null}
-                                <span>{item.label}</span>
-                              </SidebarMenuButton>
-                            ) : null}
-                          </SidebarMenuItem>
-                        ))}
-                      </SidebarMenu>
-                    </SidebarGroupContent>
-                  </CollapsibleContent>
-                </SidebarGroup>
-              </Collapsible>
-            );
-          }
-
-          return section.to ? (
-            <SidebarGroup key={section.label}>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      render={<NavLink to={section.to} end />}
-                      isActive={sectionIsActive}
-                      tooltip={section.label}
-                    >
-                      {section.icon ? (
-                        <section.icon className="h-4 w-4" />
-                      ) : null}
-                      <span>{section.label}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          ) : null;
-        })}
-      </SidebarContent>
-
-      <SidebarFooter className="border-t border-sidebar-border px-2 py-3">
-        <div className="text-sm font-medium text-sidebar-foreground">
-          {user?.name || "User"}
-        </div>
-        <div className="text-xs capitalize text-sidebar-foreground/70">
-          {user?.role}
-        </div>
-      </SidebarFooter>
-
-      <SidebarRail />
-    </UiSidebar>
+        <nav className={cn("flex-1 overflow-y-auto p-2", collapsed ? "space-y-1" : "space-y-0.5")}>
+          {MENU.map((item) => renderItem(item))}
+        </nav>
+      </aside>
+    </>
   );
 }

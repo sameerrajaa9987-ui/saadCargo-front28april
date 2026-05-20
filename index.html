@@ -2,13 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Saad Cargo Services — Railway ERP</title>
-    <meta
-      name="description"
-      content="Saad Cargo Services Railway Cargo ERP System - Booking, Shipment, and Financial Management"
-    />
+    <meta name="theme-color" content="#0E1A2D" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)" />
+    <title>Saad Cargo CRM — Mumbai</title>
+    <script>
+      // Apply theme before paint to avoid a flash. Mirrors the saad-cargo-landing storage key
+      // so a user moving between the marketing site and the CRM keeps their preference.
+      (function () {
+        try {
+          var stored = localStorage.getItem('saad_theme');
+          var theme = (stored === 'light' || stored === 'dark')
+            ? stored
+            : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+          document.documentElement.classList.toggle('dark', theme === 'dark');
+          document.documentElement.classList.toggle('light', theme === 'light');
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

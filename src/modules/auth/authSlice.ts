@@ -1,6 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { AuthUser } from "./types";
+
+export type Role = "owner" | "staff";
+
+export type AuthUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: Role;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
 
 type AuthState = {
   accessToken: string | null;
@@ -14,37 +25,25 @@ function loadState(): AuthState {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { accessToken: null, user: null };
     const parsed = JSON.parse(raw) as AuthState;
-    return {
-      accessToken: parsed.accessToken ?? null,
-      user: parsed.user ?? null,
-    };
+    return { accessToken: parsed.accessToken ?? null, user: parsed.user ?? null };
   } catch {
     return { accessToken: null, user: null };
   }
 }
 
-function persistState(state: AuthState) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
-const initialState: AuthState = loadState();
-
 const slice = createSlice({
   name: "auth",
-  initialState,
+  initialState: loadState(),
   reducers: {
-    setAuth(
-      state,
-      action: PayloadAction<{ accessToken: string; user: AuthUser }>,
-    ) {
+    setAuth(state, action: PayloadAction<{ accessToken: string; user: AuthUser }>) {
       state.accessToken = action.payload.accessToken;
       state.user = action.payload.user;
-      persistState(state);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     },
     clearAuth(state) {
       state.accessToken = null;
       state.user = null;
-      persistState(state);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     },
   },
 });

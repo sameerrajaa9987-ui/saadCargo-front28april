@@ -3,7 +3,7 @@ import { store } from "@/app/store";
 import { clearAuth } from "@/modules/auth/authSlice";
 
 export const http = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api/v1",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api",
   timeout: 20000,
 });
 
@@ -21,34 +21,18 @@ http.interceptors.response.use(
   (err: unknown) => {
     if (axios.isAxiosError(err) && err.response?.status === 401) {
       const hasToken = Boolean(store.getState().auth.accessToken);
-      if (hasToken) {
-        store.dispatch(clearAuth());
-      }
-
-      if (
-        typeof window !== "undefined" &&
-        window.location.pathname !== "/login"
-      ) {
+      if (hasToken) store.dispatch(clearAuth());
+      if (typeof window !== "undefined" && window.location.pathname !== "/login") {
         window.location.assign("/login");
       }
     }
-
     return Promise.reject(err);
-  },
+  }
 );
 
-type ApiValidationIssue = {
-  path?: Array<string | number>;
-  message?: string;
-};
-
+type ApiValidationIssue = { path?: Array<string | number>; message?: string };
 type ApiErrorResponse = {
-  error?: {
-    message?: string;
-    details?: {
-      issues?: ApiValidationIssue[];
-    };
-  };
+  error?: { message?: string; details?: { issues?: ApiValidationIssue[] } };
 };
 
 export function getApiErrorMessage(err: unknown): string {

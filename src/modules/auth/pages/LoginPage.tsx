@@ -1,20 +1,17 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useLogin } from "@/modules/auth/hooks/useLogin";
+import { useLogin } from "@/modules/auth/hooks/useAuth";
 import { useAppDispatch } from "@/app/hooks";
 import { setAuth } from "@/modules/auth/authSlice";
-import { getApiErrorMessage } from "@/shared/api/http";
+import { LogoMark } from "@/shared/components/Logo";
 
 const schema = z.object({
-  email: z.string().trim().toLowerCase().email(),
+  email: z.string().trim().email("Valid email required"),
   password: z.string().min(1, "Password is required"),
 });
-
 type FormValues = z.infer<typeof schema>;
 
 export function LoginPage() {
@@ -23,14 +20,9 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const loginMutation = useLogin();
 
-  const defaultValues = useMemo<FormValues>(
-    () => ({ email: "", password: "" }),
-    [],
-  );
-
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues,
+    defaultValues: { email: "", password: "" },
     mode: "onChange",
   });
 
@@ -39,79 +31,80 @@ export function LoginPage() {
     try {
       const result = await loginMutation.mutateAsync(values);
       dispatch(setAuth(result));
-      navigate("/dashboard", { replace: true });
+      navigate("/", { replace: true });
     } catch (e) {
-      setError(getApiErrorMessage(e));
+      setError(e instanceof Error ? e.message : "Login failed");
     }
   }
 
   return (
-    <div className="min-h-full flex items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-sm">
-        <div className="text-lg font-semibold text-foreground">Login</div>
-        <div className="mt-1 text-sm text-muted-foreground">
-          Admin and Operator access only.
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center mb-4">
+            <LogoMark size={64} />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">Saad Cargo CRM</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            Railway Parcel Forwarding · Mumbai
+          </p>
         </div>
 
-        {error ? (
-          <div className="mt-3 rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
-            {error}
-          </div>
-        ) : null}
+        <div className="rounded-2xl border border-border bg-card p-8 shadow-xl">
+          <h2 className="text-lg font-semibold text-card-foreground mb-6">
+            Sign in to continue
+          </h2>
 
-        <form className="mt-4 space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="space-y-1">
-            <label
-              htmlFor="email"
-              className="text-sm font-medium text-foreground"
+          {error ? (
+            <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+              {error}
+            </div>
+          ) : null}
+
+          <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1.5">
+                Email
+              </label>
+              <input
+                className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring transition"
+                placeholder="you@company.com"
+                autoComplete="email"
+                {...form.register("email")}
+              />
+              {form.formState.errors.email && (
+                <p className="mt-1 text-xs text-destructive">
+                  {form.formState.errors.email.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1.5">
+                Password
+              </label>
+              <input
+                type="password"
+                className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring transition"
+                autoComplete="current-password"
+                {...form.register("password")}
+              />
+              {form.formState.errors.password && (
+                <p className="mt-1 text-xs text-destructive">
+                  {form.formState.errors.password.message}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={loginMutation.isPending || !form.formState.isValid}
+              className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              Email
-            </label>
-            <Input
-              id="email"
-              placeholder="name@companyname.com"
-              autoComplete="email"
-              {...form.register("email")}
-            />
-            {form.formState.errors.email ? (
-              <div className="text-xs text-red-600">
-                {form.formState.errors.email.message}
-              </div>
-            ) : null}
-          </div>
-
-          <div className="space-y-1">
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-foreground"
-            >
-              Password
-            </label>
-            <Input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              {...form.register("password")}
-            />
-            {form.formState.errors.password ? (
-              <div className="text-xs text-red-600">
-                {form.formState.errors.password.message}
-              </div>
-            ) : null}
-          </div>
-
-          <Button
-            className="w-full"
-            disabled={loginMutation.isPending || !form.formState.isValid}
-            type="submit"
-          >
-            {loginMutation.isPending ? "Signing in..." : "Sign in"}
-          </Button>
-
-          <div className="text-xs text-muted-foreground">
-            Tip: run backend seed once to create an Admin.
-          </div>
-        </form>
+              {loginMutation.isPending ? "Signing in..." : "Sign in"}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
