@@ -36,16 +36,16 @@ const SLATE = "#94A3B8";
 /** Maps each payment mode to a distinguishable colour for the donut. */
 const MODE_COLOURS: Record<PaymentModeMix["mode"], string> = {
   paid_source: "#10B981", // emerald
-  to_pay:      "#F59E0B", // amber
-  on_bill:     "#3B82F6", // blue
-  slip:        "#94A3B8", // slate
+  to_pay: "#F59E0B", // amber
+  on_bill: "#3B82F6", // blue
+  slip: "#94A3B8", // slate
 };
 
 const MODE_LABELS: Record<PaymentModeMix["mode"], string> = {
   paid_source: "Paid Source",
-  to_pay:      "To Pay",
-  on_bill:     "On Bill",
-  slip:        "Slip",
+  to_pay: "To Pay",
+  on_bill: "On Bill",
+  slip: "Slip",
 };
 
 function MetricCard({
@@ -96,7 +96,15 @@ function ChartCard({
 }
 
 /** Compact ₹ tooltip — Recharts otherwise dumps a verbose payload */
-function MoneyTooltip({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) {
+function MoneyTooltip({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean;
+  payload?: any[];
+  label?: string;
+}) {
   if (!active || !payload?.length) return null;
   return (
     <div className="rounded-lg border border-border bg-card px-3 py-2 text-xs shadow-lg">
@@ -230,7 +238,11 @@ export function DashboardPage() {
                       <stop offset="100%" stopColor={SAFFRON_SOFT} stopOpacity={0.7} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="hsl(var(--border))"
+                    vertical={false}
+                  />
                   <XAxis
                     dataKey="label"
                     tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
@@ -243,8 +255,16 @@ export function DashboardPage() {
                     axisLine={false}
                     tickFormatter={(v: number) => (v >= 1000 ? `${Math.round(v / 1000)}k` : `${v}`)}
                   />
-                  <Tooltip cursor={{ fill: "hsl(var(--accent) / 0.10)" }} content={<MoneyTooltip />} />
-                  <Bar dataKey="revenue" name="Revenue" fill="url(#barGradient)" radius={[8, 8, 0, 0]} />
+                  <Tooltip
+                    cursor={{ fill: "hsl(var(--accent) / 0.10)" }}
+                    content={<MoneyTooltip />}
+                  />
+                  <Bar
+                    dataKey="revenue"
+                    name="Revenue"
+                    fill="url(#barGradient)"
+                    radius={[8, 8, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -290,9 +310,7 @@ export function DashboardPage() {
                         <div className="font-semibold text-foreground mb-1">
                           {MODE_LABELS[datum.mode]}
                         </div>
-                        <div className="text-muted-foreground">
-                          {datum.count} consignments
-                        </div>
+                        <div className="text-muted-foreground">{datum.count} consignments</div>
                         <div className="text-foreground font-medium">
                           {formatCurrency(datum.amount)}
                         </div>
@@ -333,7 +351,11 @@ export function DashboardPage() {
                 dataKey="station"
                 type="category"
                 width={70}
-                tick={{ fill: "hsl(var(--foreground))", fontSize: 12, fontFamily: "ui-monospace, monospace" }}
+                tick={{
+                  fill: "hsl(var(--foreground))",
+                  fontSize: 12,
+                  fontFamily: "ui-monospace, monospace",
+                }}
                 tickLine={false}
                 axisLine={false}
               />
@@ -371,14 +393,16 @@ export function DashboardPage() {
           <table className="w-full text-sm min-w-[700px]">
             <thead className="border-b border-border bg-muted/40">
               <tr>
-                {["Date", "Party", "Destination", "Pkgs", "Mode", "Status", "Total (₹)"].map((h) => (
-                  <th
-                    key={h}
-                    className="px-4 py-3 text-left font-medium text-muted-foreground whitespace-nowrap"
-                  >
-                    {h}
-                  </th>
-                ))}
+                {["Date", "Party", "Destination", "Pkgs", "Mode", "Status", "Total (₹)"].map(
+                  (h) => (
+                    <th
+                      key={h}
+                      className="px-4 py-3 text-left font-medium text-muted-foreground whitespace-nowrap"
+                    >
+                      {h}
+                    </th>
+                  ),
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">

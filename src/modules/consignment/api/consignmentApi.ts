@@ -2,11 +2,14 @@ import { http } from "@/shared/api/http";
 import { createResourceApi } from "@/modules/common/createResourceApi";
 import type { Consignment, ConsignmentListQuery, ConsignmentCreatePayload } from "../types";
 
-const api = createResourceApi<Consignment, ConsignmentListQuery, ConsignmentCreatePayload>("/consignments");
+const api = createResourceApi<Consignment, ConsignmentListQuery, ConsignmentCreatePayload>(
+  "/consignments",
+);
 
 export const listConsignments = (query: ConsignmentListQuery) => api.list(query);
 export const createConsignment = (payload: ConsignmentCreatePayload) => api.create(payload);
-export const updateConsignment = (id: string, payload: Partial<ConsignmentCreatePayload>) => api.update(id, payload);
+export const updateConsignment = (id: string, payload: Partial<ConsignmentCreatePayload>) =>
+  api.update(id, payload);
 export const deleteConsignment = (id: string) => api.remove(id);
 
 export async function getDailySummary(date: string) {

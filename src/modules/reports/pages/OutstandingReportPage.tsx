@@ -25,7 +25,9 @@ export function OutstandingReportPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold">Outstanding Report</h1>
-          <p className="text-sm text-muted-foreground">Party-wise pending amounts, aged by consignment date</p>
+          <p className="text-sm text-muted-foreground">
+            Party-wise pending amounts, aged by consignment date
+          </p>
         </div>
         <a
           href={getExportUrl("outstanding", {})}
@@ -93,9 +95,21 @@ export function OutstandingReportPage() {
                 <td className="px-4 py-2.5 font-mono text-xs">{row.mobile || "-"}</td>
                 <td className="px-4 py-2.5 text-right">{row.consignmentCount}</td>
                 <Cell amount={row.aged0to30} />
-                <Cell amount={row.aged31to60} muted={false} className="text-yellow-700 dark:text-yellow-400" />
-                <Cell amount={row.aged61to90} muted={false} className="text-orange-700 dark:text-orange-400" />
-                <Cell amount={row.aged90Plus} muted={false} className="text-red-700 dark:text-red-400 font-semibold" />
+                <Cell
+                  amount={row.aged31to60}
+                  muted={false}
+                  className="text-yellow-700 dark:text-yellow-400"
+                />
+                <Cell
+                  amount={row.aged61to90}
+                  muted={false}
+                  className="text-orange-700 dark:text-orange-400"
+                />
+                <Cell
+                  amount={row.aged90Plus}
+                  muted={false}
+                  className="text-red-700 dark:text-red-400 font-semibold"
+                />
                 <td className="px-4 py-2.5 text-right font-semibold text-destructive">
                   {formatCurrency(row.totalAmount)}
                 </td>
@@ -113,7 +127,7 @@ function Th({ children, align = "left" }: { children: React.ReactNode; align?: "
     <th
       className={cn(
         "px-4 py-3 text-xs font-medium uppercase tracking-wide text-muted-foreground",
-        align === "right" ? "text-right" : "text-left"
+        align === "right" ? "text-right" : "text-left",
       )}
     >
       {children}
@@ -121,14 +135,22 @@ function Th({ children, align = "left" }: { children: React.ReactNode; align?: "
   );
 }
 
-function Cell({ amount, muted = true, className }: { amount: number; muted?: boolean; className?: string }) {
+function Cell({
+  amount,
+  muted = true,
+  className,
+}: {
+  amount: number;
+  muted?: boolean;
+  className?: string;
+}) {
   return (
     <td
       className={cn(
         "px-4 py-2.5 text-right font-mono text-xs tabular-nums",
         amount === 0 && muted && "text-muted-foreground/50",
         amount === 0 && !muted && "text-muted-foreground/50",
-        className
+        className,
       )}
     >
       {amount > 0 ? formatCurrency(amount) : "—"}
@@ -139,10 +161,10 @@ function Cell({ amount, muted = true, className }: { amount: number; muted?: boo
 type Tone = "ok" | "watch" | "warn" | "bad" | "muted";
 
 const TONE_CLASSES: Record<Tone, string> = {
-  ok:    "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300",
+  ok: "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300",
   watch: "border-yellow-500/30  bg-yellow-500/5  text-yellow-700  dark:text-yellow-300",
-  warn:  "border-orange-500/30  bg-orange-500/5  text-orange-700  dark:text-orange-300",
-  bad:   "border-red-500/30     bg-red-500/5     text-red-700     dark:text-red-300",
+  warn: "border-orange-500/30  bg-orange-500/5  text-orange-700  dark:text-orange-300",
+  bad: "border-red-500/30     bg-red-500/5     text-red-700     dark:text-red-300",
   muted: "border-border         bg-card",
 };
 

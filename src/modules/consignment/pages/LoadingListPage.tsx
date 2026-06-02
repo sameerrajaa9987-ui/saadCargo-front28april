@@ -20,7 +20,8 @@ export function LoadingListPage() {
   });
 
   const items = data?.items ?? [];
-  const inputCls = "rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
+  const inputCls =
+    "rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
 
   // Group by destination station for summary
   const stationGroups = items.reduce<Record<string, number>>((acc, c) => {
@@ -37,7 +38,9 @@ export function LoadingListPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-foreground">Loading List</h1>
-          <p className="text-sm text-muted-foreground">All consignments for dispatch on a given date</p>
+          <p className="text-sm text-muted-foreground">
+            All consignments for dispatch on a given date
+          </p>
         </div>
         <button
           onClick={() => window.print()}
@@ -52,10 +55,17 @@ export function LoadingListPage() {
         <div className="flex flex-wrap gap-4 items-end">
           <div>
             <label className="block text-xs font-medium text-muted-foreground mb-1">Date</label>
-            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={inputCls} />
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className={inputCls}
+            />
           </div>
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-1">Destination Station</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">
+              Destination Station
+            </label>
             <input
               value={station}
               onChange={(e) => setStation(e.target.value.toUpperCase())}
@@ -82,7 +92,10 @@ export function LoadingListPage() {
       <div className="hidden print:block mb-4">
         <h2 className="text-lg font-bold">Loading List — {formatDate(date)}</h2>
         {station && <p className="text-sm">Station: {station}</p>}
-        <p className="text-sm text-gray-500">Total: {items.length} consignments | {totalPackages} packages | {totalWeight.toFixed(2)} kg | {formatCurrency(totalAmount)}</p>
+        <p className="text-sm text-gray-500">
+          Total: {items.length} consignments | {totalPackages} packages | {totalWeight.toFixed(2)}{" "}
+          kg | {formatCurrency(totalAmount)}
+        </p>
       </div>
 
       {/* Summary strip */}
@@ -107,7 +120,10 @@ export function LoadingListPage() {
           <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 shadow-sm text-sm">
             <span className="text-muted-foreground">Stations:</span>
             {Object.entries(stationGroups).map(([st, cnt]) => (
-              <span key={st} className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+              <span
+                key={st}
+                className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary"
+              >
                 {st} <span className="text-muted-foreground font-normal">({cnt})</span>
               </span>
             ))}
@@ -120,8 +136,24 @@ export function LoadingListPage() {
         <table className="w-full text-sm min-w-[1100px] print:min-w-0">
           <thead className="border-b border-border bg-muted/40">
             <tr>
-              {["#", "RR No.", "Station", "Party", "Train No.", "Pkgs", "Wt (kg)", "Contents", "Mode", "Amount (₹)"].map((h) => (
-                <th key={h} className="px-4 py-3 text-left font-medium text-muted-foreground whitespace-nowrap">{h}</th>
+              {[
+                "#",
+                "RR No.",
+                "Station",
+                "Party",
+                "Train No.",
+                "Pkgs",
+                "Wt (kg)",
+                "Contents",
+                "Mode",
+                "Amount (₹)",
+              ].map((h) => (
+                <th
+                  key={h}
+                  className="px-4 py-3 text-left font-medium text-muted-foreground whitespace-nowrap"
+                >
+                  {h}
+                </th>
               ))}
             </tr>
           </thead>
@@ -138,7 +170,8 @@ export function LoadingListPage() {
             {!isLoading && items.length === 0 && (
               <tr>
                 <td colSpan={10} className="px-4 py-10 text-center text-muted-foreground">
-                  No consignments for {formatDate(date)}{station ? ` to ${station}` : ""}
+                  No consignments for {formatDate(date)}
+                  {station ? ` to ${station}` : ""}
                 </td>
               </tr>
             )}
@@ -153,9 +186,16 @@ export function LoadingListPage() {
                 <td className="px-4 py-2.5 font-mono text-xs">{c.trainNumber || "—"}</td>
                 <td className="px-4 py-2.5">{c.packages}</td>
                 <td className="px-4 py-2.5">{c.chargeableWeight.toFixed(2)}</td>
-                <td className="px-4 py-2.5 text-muted-foreground max-w-[120px] truncate">{c.contents ?? "—"}</td>
+                <td className="px-4 py-2.5 text-muted-foreground max-w-[120px] truncate">
+                  {c.contents ?? "—"}
+                </td>
                 <td className="px-4 py-2.5">
-                  <span className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium", PAYMENT_MODE_COLORS[c.paymentMode] ?? "")}>
+                  <span
+                    className={cn(
+                      "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
+                      PAYMENT_MODE_COLORS[c.paymentMode] ?? "",
+                    )}
+                  >
                     {c.paymentMode.replace("_", " ")}
                   </span>
                 </td>
@@ -164,7 +204,9 @@ export function LoadingListPage() {
             ))}
             {items.length > 0 && (
               <tr className="border-t-2 border-border bg-muted/20 font-semibold">
-                <td colSpan={5} className="px-4 py-2.5">TOTAL</td>
+                <td colSpan={5} className="px-4 py-2.5">
+                  TOTAL
+                </td>
                 <td className="px-4 py-2.5">{totalPackages}</td>
                 <td className="px-4 py-2.5">{totalWeight.toFixed(2)}</td>
                 <td colSpan={2} className="px-4 py-2.5" />

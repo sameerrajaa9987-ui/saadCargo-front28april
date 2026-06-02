@@ -42,7 +42,14 @@ export type PodListQuery = {
 
 export type PodListResult = {
   items: Pod[];
-  meta: { total: number; totalPages: number; hasNextPage: boolean; hasPrevPage: boolean; page: number; limit: number };
+  meta: {
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    page: number;
+    limit: number;
+  };
 };
 
 export type PodCreatePayload = {

@@ -19,12 +19,20 @@ export function PartyListPage() {
         { header: "State", getValue: (p) => p.state || "-" },
         { header: "Mobile", getValue: (p) => p.mobile || "-" },
         { header: "Email", getValue: (p) => p.email || "-", className: "max-w-[200px] truncate" },
-        { header: "GSTIN", getValue: (p) => p.gstin ? <span className="font-mono text-xs">{p.gstin}</span> : "-" },
-        { header: "PAN", getValue: (p) => p.pan ? <span className="font-mono text-xs">{p.pan}</span> : "-" },
+        {
+          header: "GSTIN",
+          getValue: (p) => (p.gstin ? <span className="font-mono text-xs">{p.gstin}</span> : "-"),
+        },
+        {
+          header: "PAN",
+          getValue: (p) => (p.pan ? <span className="font-mono text-xs">{p.pan}</span> : "-"),
+        },
         {
           header: "Status",
           getValue: (p) => (
-            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${p.isActive ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"}`}>
+            <span
+              className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${p.isActive ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"}`}
+            >
               {p.isActive ? "Active" : "Inactive"}
             </span>
           ),
@@ -40,7 +48,13 @@ export function PartyListPage() {
         sortDir: "desc" as const,
       })}
       renderDialog={({ open, onOpenChange, mode, value, onSuccess }) => (
-        <PartyDialog open={open} onOpenChange={onOpenChange} mode={mode} value={value} onSuccess={onSuccess} />
+        <PartyDialog
+          open={open}
+          onOpenChange={onOpenChange}
+          mode={mode}
+          value={value}
+          onSuccess={onSuccess}
+        />
       )}
     />
   );

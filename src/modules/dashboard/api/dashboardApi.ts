@@ -1,8 +1,8 @@
 import { http } from "@/shared/api/http";
 
 export type MonthlyTrendPoint = {
-  month: string;       // "2026-05"
-  label: string;       // "May 26"
+  month: string; // "2026-05"
+  label: string; // "May 26"
   revenue: number;
   consignments: number;
 };

@@ -4,20 +4,58 @@ import { AppLayout } from "./app/layouts/AppLayout";
 import { RequireAuth } from "./app/router/RequireAuth";
 import { PageLoader } from "./shared/components/PageLoader";
 
-const LoginPage = lazy(() => import("./modules/auth/pages/LoginPage").then((m) => ({ default: m.LoginPage })));
-const DashboardPage = lazy(() => import("./modules/dashboard/pages/DashboardPage").then((m) => ({ default: m.DashboardPage })));
-const PartyListPage = lazy(() => import("./modules/party/pages/PartyListPage").then((m) => ({ default: m.PartyListPage })));
-const ConsignmentListPage = lazy(() => import("./modules/consignment/pages/ConsignmentListPage").then((m) => ({ default: m.ConsignmentListPage })));
-const DailySummaryPage = lazy(() => import("./modules/consignment/pages/DailySummaryPage").then((m) => ({ default: m.DailySummaryPage })));
-const LoadingListPage = lazy(() => import("./modules/consignment/pages/LoadingListPage").then((m) => ({ default: m.LoadingListPage })));
-const PaymentListPage = lazy(() => import("./modules/payment/pages/PaymentListPage").then((m) => ({ default: m.PaymentListPage })));
-const InvoiceListPage = lazy(() => import("./modules/invoice/pages/InvoiceListPage").then((m) => ({ default: m.InvoiceListPage })));
-const PodListPage = lazy(() => import("./modules/pod/pages/PodListPage").then((m) => ({ default: m.PodListPage })));
-const DailyReportPage = lazy(() => import("./modules/reports/pages/DailyReportPage").then((m) => ({ default: m.DailyReportPage })));
-const OutstandingReportPage = lazy(() => import("./modules/reports/pages/OutstandingReportPage").then((m) => ({ default: m.OutstandingReportPage })));
-const StationReportPage = lazy(() => import("./modules/reports/pages/StationReportPage").then((m) => ({ default: m.StationReportPage })));
-const GstReportPage = lazy(() => import("./modules/reports/pages/GstReportPage").then((m) => ({ default: m.GstReportPage })));
-const SettingsPage = lazy(() => import("./modules/settings/pages/SettingsPage").then((m) => ({ default: m.SettingsPage })));
+const LoginPage = lazy(() =>
+  import("./modules/auth/pages/LoginPage").then((m) => ({ default: m.LoginPage })),
+);
+const DashboardPage = lazy(() =>
+  import("./modules/dashboard/pages/DashboardPage").then((m) => ({ default: m.DashboardPage })),
+);
+const PartyListPage = lazy(() =>
+  import("./modules/party/pages/PartyListPage").then((m) => ({ default: m.PartyListPage })),
+);
+const ConsignmentListPage = lazy(() =>
+  import("./modules/consignment/pages/ConsignmentListPage").then((m) => ({
+    default: m.ConsignmentListPage,
+  })),
+);
+const DailySummaryPage = lazy(() =>
+  import("./modules/consignment/pages/DailySummaryPage").then((m) => ({
+    default: m.DailySummaryPage,
+  })),
+);
+const LoadingListPage = lazy(() =>
+  import("./modules/consignment/pages/LoadingListPage").then((m) => ({
+    default: m.LoadingListPage,
+  })),
+);
+const PaymentListPage = lazy(() =>
+  import("./modules/payment/pages/PaymentListPage").then((m) => ({ default: m.PaymentListPage })),
+);
+const InvoiceListPage = lazy(() =>
+  import("./modules/invoice/pages/InvoiceListPage").then((m) => ({ default: m.InvoiceListPage })),
+);
+const PodListPage = lazy(() =>
+  import("./modules/pod/pages/PodListPage").then((m) => ({ default: m.PodListPage })),
+);
+const DailyReportPage = lazy(() =>
+  import("./modules/reports/pages/DailyReportPage").then((m) => ({ default: m.DailyReportPage })),
+);
+const OutstandingReportPage = lazy(() =>
+  import("./modules/reports/pages/OutstandingReportPage").then((m) => ({
+    default: m.OutstandingReportPage,
+  })),
+);
+const StationReportPage = lazy(() =>
+  import("./modules/reports/pages/StationReportPage").then((m) => ({
+    default: m.StationReportPage,
+  })),
+);
+const GstReportPage = lazy(() =>
+  import("./modules/reports/pages/GstReportPage").then((m) => ({ default: m.GstReportPage })),
+);
+const SettingsPage = lazy(() =>
+  import("./modules/settings/pages/SettingsPage").then((m) => ({ default: m.SettingsPage })),
+);
 
 export default function App() {
   return (

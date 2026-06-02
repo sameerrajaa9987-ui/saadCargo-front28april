@@ -5,10 +5,12 @@ import type { PodListQuery, PodCreatePayload, PodListResult } from "../types";
 import { getApiErrorMessage } from "@/shared/api/http";
 import { toast } from "@/shared/lib/toast";
 
-const crud = createResourceHooks<PodListQuery, PodCreatePayload, PodListResult>(
-  "pods",
-  { list: listPods, create: createPod, update: updatePod, remove: deletePod }
-);
+const crud = createResourceHooks<PodListQuery, PodCreatePayload, PodListResult>("pods", {
+  list: listPods,
+  create: createPod,
+  update: updatePod,
+  remove: deletePod,
+});
 
 export const usePods = crud.useList;
 export const useCreatePod = crud.useCreate;
@@ -20,7 +22,10 @@ export function useUpdatePodStatus() {
   return useMutation({
     mutationFn: ({ id, deliveryStatus }: { id: string; deliveryStatus: string }) =>
       updatePodStatus(id, deliveryStatus),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ["pods"] }); toast.success("Status updated"); },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["pods"] });
+      toast.success("Status updated");
+    },
     onError: (err) => toast.error(getApiErrorMessage(err)),
   });
 }

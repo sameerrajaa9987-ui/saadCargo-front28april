@@ -4,7 +4,7 @@ import type { PaymentListQuery, PaymentCreatePayload, PaymentListResult } from "
 
 const crud = createResourceHooks<PaymentListQuery, PaymentCreatePayload, PaymentListResult>(
   "payments",
-  { list: listPayments, create: createPayment, update: updatePayment, remove: deletePayment }
+  { list: listPayments, create: createPayment, update: updatePayment, remove: deletePayment },
 );
 
 export const usePayments = crud.useList;

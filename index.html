@@ -12,12 +12,15 @@
       // so a user moving between the marketing site and the CRM keeps their preference.
       (function () {
         try {
-          var stored = localStorage.getItem('saad_theme');
-          var theme = (stored === 'light' || stored === 'dark')
-            ? stored
-            : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-          document.documentElement.classList.toggle('dark', theme === 'dark');
-          document.documentElement.classList.toggle('light', theme === 'light');
+          var stored = localStorage.getItem("saad_theme");
+          var theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches
+                ? "light"
+                : "dark";
+          document.documentElement.classList.toggle("dark", theme === "dark");
+          document.documentElement.classList.toggle("light", theme === "light");
         } catch (e) {}
       })();
     </script>

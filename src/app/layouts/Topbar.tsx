@@ -45,7 +45,10 @@ export function Topbar() {
           </div>
           <UserCircle2 className="h-8 w-8 text-primary/70" />
           <button
-            onClick={() => { dispatch(clearAuth()); navigate("/login", { replace: true }); }}
+            onClick={() => {
+              dispatch(clearAuth());
+              navigate("/login", { replace: true });
+            }}
             className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
           >
             <LogOut className="h-4 w-4" />

@@ -16,7 +16,15 @@ interface Props {
   onSuccess: () => void;
 }
 
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+function Field({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
       <label className="block text-xs font-medium text-muted-foreground mb-1">{label}</label>
@@ -26,7 +34,8 @@ function Field({ label, error, children }: { label: string; error?: string; chil
   );
 }
 
-const inputCls = "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
+const inputCls =
+  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
 
 export function PartyDialog({ open, onOpenChange, mode, value, onSuccess }: Props) {
   const createMutation = useCreateParty();
@@ -35,21 +44,43 @@ export function PartyDialog({ open, onOpenChange, mode, value, onSuccess }: Prop
 
   const form = useForm<PartyFormValues>({
     resolver: zodResolver(partySchema),
-    defaultValues: { name: "", mobile: "", email: "", address: "", city: "", state: "", gstin: "", pan: "" },
+    defaultValues: {
+      name: "",
+      mobile: "",
+      email: "",
+      address: "",
+      city: "",
+      state: "",
+      gstin: "",
+      pan: "",
+    },
   });
 
   useEffect(() => {
     if (open) {
-      form.reset(mode === "edit" && value ? {
-        name: value.name,
-        mobile: value.mobile ?? "",
-        email: value.email ?? "",
-        address: value.address ?? "",
-        city: value.city ?? "",
-        state: value.state ?? "",
-        gstin: value.gstin ?? "",
-        pan: value.pan ?? "",
-      } : { name: "", mobile: "", email: "", address: "", city: "", state: "", gstin: "", pan: "" });
+      form.reset(
+        mode === "edit" && value
+          ? {
+              name: value.name,
+              mobile: value.mobile ?? "",
+              email: value.email ?? "",
+              address: value.address ?? "",
+              city: value.city ?? "",
+              state: value.state ?? "",
+              gstin: value.gstin ?? "",
+              pan: value.pan ?? "",
+            }
+          : {
+              name: "",
+              mobile: "",
+              email: "",
+              address: "",
+              city: "",
+              state: "",
+              gstin: "",
+              pan: "",
+            },
+      );
     }
   }, [open, mode, value, form]);
 
@@ -94,7 +125,11 @@ export function PartyDialog({ open, onOpenChange, mode, value, onSuccess }: Prop
         </Field>
         <div className="sm:col-span-2">
           <Field label="Address" error={errors.address?.message}>
-            <input className={inputCls} placeholder="Street address" {...form.register("address")} />
+            <input
+              className={inputCls}
+              placeholder="Street address"
+              {...form.register("address")}
+            />
           </Field>
         </div>
         <Field label="City" error={errors.city?.message}>

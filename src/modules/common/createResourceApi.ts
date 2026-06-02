@@ -2,14 +2,19 @@ import { http } from "@/shared/api/http";
 
 type ListResponse<T> = {
   data: T[];
-  meta: { total: number; totalPages: number; hasNextPage: boolean; hasPrevPage: boolean; page: number; limit: number };
+  meta: {
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    page: number;
+    limit: number;
+  };
 };
 
-export function createResourceApi<
-  TItem,
-  TListQuery extends object,
-  TCreatePayload extends object,
->(resourcePath: string) {
+export function createResourceApi<TItem, TListQuery extends object, TCreatePayload extends object>(
+  resourcePath: string,
+) {
   return {
     async list(query: TListQuery) {
       const res = await http.get<ListResponse<TItem>>(resourcePath, { params: query });

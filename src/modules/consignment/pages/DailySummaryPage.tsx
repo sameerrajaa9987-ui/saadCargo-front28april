@@ -15,7 +15,8 @@ export function DailySummaryPage() {
     enabled: Boolean(date),
   });
 
-  const inputCls = "rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
+  const inputCls =
+    "rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
 
   const totals = data
     ? {
@@ -32,7 +33,9 @@ export function DailySummaryPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-foreground">Daily Summary</h1>
-          <p className="text-sm text-muted-foreground">Station-wise consignment summary for a single day</p>
+          <p className="text-sm text-muted-foreground">
+            Station-wise consignment summary for a single day
+          </p>
         </div>
         <a
           href={getExportUrl("station", { startDate: date, endDate: date })}
@@ -49,7 +52,12 @@ export function DailySummaryPage() {
         <div className="flex flex-wrap gap-4 items-end">
           <div>
             <label className="block text-xs font-medium text-muted-foreground mb-1">Date</label>
-            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={inputCls} />
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className={inputCls}
+            />
           </div>
           <button
             onClick={() => void refetch()}
@@ -82,7 +90,10 @@ export function DailySummaryPage() {
             { label: "Wt (kg)", value: totals.weight.toFixed(2) },
             { label: "Total Revenue", value: formatCurrency(totals.amount) },
           ].map((card) => (
-            <div key={card.label} className="rounded-xl border border-border bg-card p-4 shadow-sm text-center">
+            <div
+              key={card.label}
+              className="rounded-xl border border-border bg-card p-4 shadow-sm text-center"
+            >
               <p className="text-xs font-medium text-muted-foreground">{card.label}</p>
               <p className="mt-1 text-lg font-bold text-foreground">{card.value}</p>
             </div>
@@ -95,11 +106,16 @@ export function DailySummaryPage() {
         <table className="w-full text-sm min-w-[700px]">
           <thead className="border-b border-border bg-muted/40">
             <tr>
-              {["Station", "Consignments", "Packages", "Wt (kg)", "Freight (₹)", "Total (₹)"].map((h) => (
-                <th key={h} className="px-4 py-3 text-left font-medium text-muted-foreground whitespace-nowrap">
-                  {h}
-                </th>
-              ))}
+              {["Station", "Consignments", "Packages", "Wt (kg)", "Freight (₹)", "Total (₹)"].map(
+                (h) => (
+                  <th
+                    key={h}
+                    className="px-4 py-3 text-left font-medium text-muted-foreground whitespace-nowrap"
+                  >
+                    {h}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-border">

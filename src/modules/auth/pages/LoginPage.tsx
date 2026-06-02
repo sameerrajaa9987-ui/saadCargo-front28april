@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,6 +19,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLogin();
 
   const form = useForm<FormValues>({
@@ -45,15 +47,11 @@ export function LoginPage() {
             <LogoMark size={64} />
           </div>
           <h1 className="text-2xl font-bold text-foreground">Saad Cargo CRM</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Railway Parcel Forwarding · Mumbai
-          </p>
+          <p className="text-muted-foreground text-sm mt-1">Railway Parcel Forwarding · Mumbai</p>
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-8 shadow-xl">
-          <h2 className="text-lg font-semibold text-card-foreground mb-6">
-            Sign in to continue
-          </h2>
+          <h2 className="text-lg font-semibold text-card-foreground mb-6">Sign in to continue</h2>
 
           {error ? (
             <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
@@ -63,9 +61,7 @@ export function LoginPage() {
 
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">
-                Email
-              </label>
+              <label className="block text-sm font-medium text-foreground mb-1.5">Email</label>
               <input
                 className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring transition"
                 placeholder="you@company.com"
@@ -80,15 +76,23 @@ export function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">
-                Password
-              </label>
-              <input
-                type="password"
-                className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring transition"
-                autoComplete="current-password"
-                {...form.register("password")}
-              />
+              <label className="block text-sm font-medium text-foreground mb-1.5">Password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2.5 pr-10 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring transition"
+                  autoComplete="current-password"
+                  {...form.register("password")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground focus:outline-none"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
               {form.formState.errors.password && (
                 <p className="mt-1 text-xs text-destructive">
                   {form.formState.errors.password.message}

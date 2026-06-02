@@ -37,12 +37,26 @@ export function FormDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className={cn("w-full rounded-2xl border border-border bg-card shadow-2xl flex flex-col max-h-[90vh]", sizeMap[size])}>
+      <div
+        className={cn(
+          "w-full rounded-2xl border border-border bg-card shadow-2xl flex flex-col max-h-[90vh]",
+          sizeMap[size],
+        )}
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border px-6 py-4 shrink-0">
           <h2 className="text-base font-semibold text-foreground">{title}</h2>
-          <button onClick={() => onOpenChange(false)} className="rounded-lg p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors">
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <button
+            onClick={() => onOpenChange(false)}
+            className="rounded-lg p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          >
+            <svg
+              className="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
@@ -61,7 +75,10 @@ export function FormDialog({
         {/* Footer */}
         {!hideFooter && (
           <div className="flex justify-end gap-3 border-t border-border px-6 py-4 shrink-0">
-            <button onClick={() => onOpenChange(false)} className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-accent transition-colors">
+            <button
+              onClick={() => onOpenChange(false)}
+              className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
+            >
               Cancel
             </button>
             {onSubmit && (

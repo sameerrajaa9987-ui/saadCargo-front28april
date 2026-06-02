@@ -6,7 +6,10 @@ const api = createResourceApi<Invoice, InvoiceListQuery, InvoiceCreatePayload>("
 
 export const listInvoices = (q: InvoiceListQuery) => api.list(q);
 export const createInvoice = (p: InvoiceCreatePayload) => api.create(p);
-export const updateInvoice = (id: string, p: Partial<{ date: string; cgstRate: number; sgstRate: number; igstRate: number; notes: string }>) => api.update(id, p);
+export const updateInvoice = (
+  id: string,
+  p: Partial<{ date: string; cgstRate: number; sgstRate: number; igstRate: number; notes: string }>,
+) => api.update(id, p);
 export const deleteInvoice = (id: string) => api.remove(id);
 
 export async function finalizeInvoice(id: string) {

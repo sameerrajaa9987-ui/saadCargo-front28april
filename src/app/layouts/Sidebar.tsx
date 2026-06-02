@@ -22,7 +22,7 @@ export function Sidebar() {
   const { open, setOpen } = useSidebar();
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   const [isDesktop, setIsDesktop] = useState<boolean>(() =>
-    typeof window === "undefined" ? true : window.matchMedia("(min-width: 768px)").matches
+    typeof window === "undefined" ? true : window.matchMedia("(min-width: 768px)").matches,
   );
 
   // Track viewport to know when to show overlay vs push-column
@@ -76,7 +76,7 @@ export function Sidebar() {
                 "flex items-center justify-center rounded-lg p-2 transition-colors",
                 isActive || active
                   ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
               )
             }
           >
@@ -93,7 +93,7 @@ export function Sidebar() {
               "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
               "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
               active && "text-sidebar-accent-foreground",
-              depth > 0 && "pl-8 text-xs"
+              depth > 0 && "pl-8 text-xs",
             )}
           >
             {item.icon && <item.icon className="h-4 w-4 shrink-0" />}
@@ -126,7 +126,7 @@ export function Sidebar() {
               "flex items-center justify-center rounded-lg p-2 transition-colors",
               isActive
                 ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
-                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
             )
           }
         >
@@ -146,7 +146,7 @@ export function Sidebar() {
             isActive
               ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
               : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-            depth > 0 && "py-1.5 text-xs"
+            depth > 0 && "py-1.5 text-xs",
           )
         }
       >
@@ -175,13 +175,13 @@ export function Sidebar() {
           isDesktop ? (open ? "md:w-60" : "md:w-16") : "md:w-60",
           // Mobile drawer
           "fixed inset-y-0 left-0 z-40 w-60 md:z-auto",
-          !isDesktop && (open ? "translate-x-0 shadow-2xl" : "-translate-x-full")
+          !isDesktop && (open ? "translate-x-0 shadow-2xl" : "-translate-x-full"),
         )}
       >
         <div
           className={cn(
             "flex h-14 items-center border-b border-sidebar-border",
-            collapsed ? "justify-center px-2" : "gap-2.5 px-4"
+            collapsed ? "justify-center px-2" : "gap-2.5 px-4",
           )}
         >
           <LogoMark size={collapsed ? 36 : 32} />

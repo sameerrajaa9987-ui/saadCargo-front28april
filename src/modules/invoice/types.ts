@@ -4,7 +4,10 @@ export type Invoice = {
   id: string;
   billNumber: string;
   billNumberRaw: number;
-  party: { id: string; name: string; mobile?: string; gstin?: string; address?: string } | string | null;
+  party:
+    | { id: string; name: string; mobile?: string; gstin?: string; address?: string }
+    | string
+    | null;
   partySnapshot?: { name?: string; address?: string; gstin?: string };
   date: string;
   consignments: Array<Consignment | string>;
@@ -37,7 +40,14 @@ export type InvoiceListQuery = {
 
 export type InvoiceListResult = {
   items: Invoice[];
-  meta: { total: number; totalPages: number; hasNextPage: boolean; hasPrevPage: boolean; page: number; limit: number };
+  meta: {
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    page: number;
+    limit: number;
+  };
 };
 
 export type InvoiceCreatePayload = {

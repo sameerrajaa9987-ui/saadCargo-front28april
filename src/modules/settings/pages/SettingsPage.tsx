@@ -39,7 +39,8 @@ async function saveProfile(patch: ProfilePatch): Promise<BusinessProfile> {
   return res.data.data;
 }
 
-const inputCls = "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
+const inputCls =
+  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -122,36 +123,60 @@ export function SettingsPage() {
     <div className="erp-page max-w-3xl">
       <div>
         <h1 className="text-xl font-bold">Business Profile</h1>
-        <p className="text-sm text-muted-foreground">Company details used in invoices and bilti PDFs</p>
+        <p className="text-sm text-muted-foreground">
+          Company details used in invoices and bilti PDFs
+        </p>
       </div>
 
       <div className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-6">
         {/* Company */}
         <div>
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">Company Info</h2>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">
+            Company Info
+          </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <Field label="Business Name">
-                <input className={inputCls} value={merged.businessName ?? ""} onChange={setText("businessName")} />
+                <input
+                  className={inputCls}
+                  value={merged.businessName ?? ""}
+                  onChange={setText("businessName")}
+                />
               </Field>
             </div>
             <div className="sm:col-span-2">
               <Field label="Tagline">
-                <input className={inputCls} value={merged.tagline ?? ""} onChange={setText("tagline")} />
+                <input
+                  className={inputCls}
+                  value={merged.tagline ?? ""}
+                  onChange={setText("tagline")}
+                />
               </Field>
             </div>
             <div className="sm:col-span-2">
               <Field label="Office Address">
-                <input className={inputCls} value={merged.officeAddress ?? ""} onChange={setText("officeAddress")} />
+                <input
+                  className={inputCls}
+                  value={merged.officeAddress ?? ""}
+                  onChange={setText("officeAddress")}
+                />
               </Field>
             </div>
             <div className="sm:col-span-2">
               <Field label="Godown Address">
-                <input className={inputCls} value={merged.godownAddress ?? ""} onChange={setText("godownAddress")} />
+                <input
+                  className={inputCls}
+                  value={merged.godownAddress ?? ""}
+                  onChange={setText("godownAddress")}
+                />
               </Field>
             </div>
             <Field label="Jurisdiction">
-              <input className={inputCls} value={merged.jurisdiction ?? ""} onChange={setText("jurisdiction")} />
+              <input
+                className={inputCls}
+                value={merged.jurisdiction ?? ""}
+                onChange={setText("jurisdiction")}
+              />
             </Field>
             <Field label="GSTIN">
               <input className={inputCls} value={merged.gstin ?? ""} onChange={setText("gstin")} />
@@ -160,7 +185,12 @@ export function SettingsPage() {
               <input className={inputCls} value={merged.pan ?? ""} onChange={setText("pan")} />
             </Field>
             <Field label="Liability Limit (₹)">
-              <input type="number" className={inputCls} value={merged.liabilityLimit ?? ""} onChange={setNumber("liabilityLimit")} />
+              <input
+                type="number"
+                className={inputCls}
+                value={merged.liabilityLimit ?? ""}
+                onChange={setNumber("liabilityLimit")}
+              />
             </Field>
           </div>
         </div>
@@ -168,7 +198,9 @@ export function SettingsPage() {
         {/* Mobile numbers (up to 4) */}
         <div className="border-t border-border pt-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Mobile Numbers</h2>
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+              Mobile Numbers
+            </h2>
             <button
               type="button"
               onClick={addMobile}
@@ -197,59 +229,108 @@ export function SettingsPage() {
               </div>
             ))}
             {(merged.mobileNumbers?.length ?? 0) === 0 && (
-              <p className="text-xs text-muted-foreground sm:col-span-2">No mobile numbers added yet.</p>
+              <p className="text-xs text-muted-foreground sm:col-span-2">
+                No mobile numbers added yet.
+              </p>
             )}
           </div>
         </div>
 
         {/* Bank Details */}
         <div className="border-t border-border pt-6">
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">Bank Details</h2>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">
+            Bank Details
+          </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Bank Name">
-              <input className={inputCls} value={merged.bankName ?? ""} onChange={setText("bankName")} />
+              <input
+                className={inputCls}
+                value={merged.bankName ?? ""}
+                onChange={setText("bankName")}
+              />
             </Field>
             <Field label="Account Number">
-              <input className={inputCls} value={merged.bankAccountNumber ?? ""} onChange={setText("bankAccountNumber")} />
+              <input
+                className={inputCls}
+                value={merged.bankAccountNumber ?? ""}
+                onChange={setText("bankAccountNumber")}
+              />
             </Field>
             <Field label="IFSC Code">
-              <input className={inputCls} value={merged.bankIFSC ?? ""} onChange={setText("bankIFSC")} />
+              <input
+                className={inputCls}
+                value={merged.bankIFSC ?? ""}
+                onChange={setText("bankIFSC")}
+              />
             </Field>
             <Field label="Branch">
-              <input className={inputCls} value={merged.bankBranch ?? ""} onChange={setText("bankBranch")} />
+              <input
+                className={inputCls}
+                value={merged.bankBranch ?? ""}
+                onChange={setText("bankBranch")}
+              />
             </Field>
           </div>
         </div>
 
         {/* GST + bill numbering */}
         <div className="border-t border-border pt-6">
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">GST &amp; Bill Numbering</h2>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">
+            GST &amp; Bill Numbering
+          </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Default CGST %">
-              <input type="number" step="0.01" className={inputCls} value={merged.defaultCgstRate ?? ""} onChange={setNumber("defaultCgstRate")} />
+              <input
+                type="number"
+                step="0.01"
+                className={inputCls}
+                value={merged.defaultCgstRate ?? ""}
+                onChange={setNumber("defaultCgstRate")}
+              />
             </Field>
             <Field label="Default SGST %">
-              <input type="number" step="0.01" className={inputCls} value={merged.defaultSgstRate ?? ""} onChange={setNumber("defaultSgstRate")} />
+              <input
+                type="number"
+                step="0.01"
+                className={inputCls}
+                value={merged.defaultSgstRate ?? ""}
+                onChange={setNumber("defaultSgstRate")}
+              />
             </Field>
             <Field label="Bill Number Prefix">
-              <input className={inputCls} value={merged.billNumberPrefix ?? ""} onChange={setText("billNumberPrefix")} placeholder='e.g. "SC/" or empty' />
+              <input
+                className={inputCls}
+                value={merged.billNumberPrefix ?? ""}
+                onChange={setText("billNumberPrefix")}
+                placeholder='e.g. "SC/" or empty'
+              />
             </Field>
             <Field label="Use Financial Year Prefix">
               <label className="inline-flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"
                   checked={merged.useFinancialYearPrefix ?? false}
-                  onChange={(e) => setForm((f) => ({ ...f, useFinancialYearPrefix: e.target.checked }))}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, useFinancialYearPrefix: e.target.checked }))
+                  }
                   className="h-4 w-4 cursor-pointer"
                 />
                 <span className="text-muted-foreground">Format bill numbers like 25-26/001</span>
               </label>
             </Field>
             <Field label="Next Bill Number (read-only)">
-              <input className={`${inputCls} bg-muted`} value={merged.nextBillNumber ?? ""} disabled />
+              <input
+                className={`${inputCls} bg-muted`}
+                value={merged.nextBillNumber ?? ""}
+                disabled
+              />
             </Field>
             <Field label="Next POD Number (read-only)">
-              <input className={`${inputCls} bg-muted`} value={merged.nextPodNumber ?? ""} disabled />
+              <input
+                className={`${inputCls} bg-muted`}
+                value={merged.nextPodNumber ?? ""}
+                disabled
+              />
             </Field>
           </div>
         </div>

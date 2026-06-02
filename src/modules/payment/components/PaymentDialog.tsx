@@ -18,12 +18,26 @@ const MODES = [
   { value: "other", label: "Other" },
 ];
 
-const inputCls = "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
+const inputCls =
+  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
 
-function Field({ label, error, required, children }: { label: string; error?: string; required?: boolean; children: React.ReactNode }) {
+function Field({
+  label,
+  error,
+  required,
+  children,
+}: {
+  label: string;
+  error?: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <div>
-      <label className="block text-xs font-medium text-muted-foreground mb-1">{label}{required && <span className="text-destructive ml-0.5">*</span>}</label>
+      <label className="block text-xs font-medium text-muted-foreground mb-1">
+        {label}
+        {required && <span className="text-destructive ml-0.5">*</span>}
+      </label>
       {children}
       {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
     </div>
@@ -46,7 +60,14 @@ export function PaymentDialog({ open, onOpenChange, mode, value, onSuccess, part
 
   const form = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
-    defaultValues: { party: "", date: new Date().toISOString().split("T")[0], amount: 0, mode: "cash", referenceNumber: "", notes: "" },
+    defaultValues: {
+      party: "",
+      date: new Date().toISOString().split("T")[0],
+      amount: 0,
+      mode: "cash",
+      referenceNumber: "",
+      notes: "",
+    },
   });
 
   useEffect(() => {
@@ -61,7 +82,14 @@ export function PaymentDialog({ open, onOpenChange, mode, value, onSuccess, part
           notes: value.notes ?? "",
         });
       } else {
-        form.reset({ party: "", date: new Date().toISOString().split("T")[0], amount: 0, mode: "cash", referenceNumber: "", notes: "" });
+        form.reset({
+          party: "",
+          date: new Date().toISOString().split("T")[0],
+          amount: 0,
+          mode: "cash",
+          referenceNumber: "",
+          notes: "",
+        });
       }
     }
   }, [open, mode, value, form]);
@@ -70,24 +98,40 @@ export function PaymentDialog({ open, onOpenChange, mode, value, onSuccess, part
 
   async function onSubmit(data: PaymentFormValues) {
     try {
-      const payload = { ...data, referenceNumber: data.referenceNumber || undefined, notes: data.notes || undefined };
+      const payload = {
+        ...data,
+        referenceNumber: data.referenceNumber || undefined,
+        notes: data.notes || undefined,
+      };
       if (mode === "create") await createM.mutateAsync(payload);
       else if (value) await updateM.mutateAsync({ id: value.id, payload });
       toast.success(mode === "create" ? "Payment recorded" : "Payment updated");
       onOpenChange(false);
       onSuccess();
-    } catch (err) { toast.error(getApiErrorMessage(err)); }
+    } catch (err) {
+      toast.error(getApiErrorMessage(err));
+    }
   }
 
   return (
-    <FormDialog open={open} onOpenChange={onOpenChange} title={mode === "create" ? "Record Payment" : "Edit Payment"}
-      onSubmit={form.handleSubmit(onSubmit)} isPending={isPending} submitLabel={mode === "create" ? "Record" : "Save"}>
+    <FormDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={mode === "create" ? "Record Payment" : "Edit Payment"}
+      onSubmit={form.handleSubmit(onSubmit)}
+      isPending={isPending}
+      submitLabel={mode === "create" ? "Record" : "Save"}
+    >
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <Field label="Party" required error={errors.party?.message}>
             <select className={`${inputCls} cursor-pointer`} {...form.register("party")}>
               <option value="">Select party...</option>
-              {parties.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              {parties.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
             </select>
           </Field>
         </div>
@@ -95,15 +139,29 @@ export function PaymentDialog({ open, onOpenChange, mode, value, onSuccess, part
           <input type="date" className={inputCls} {...form.register("date")} />
         </Field>
         <Field label="Amount (₹)" required error={errors.amount?.message}>
-          <input type="number" step="0.01" min={0} className={inputCls} {...form.register("amount")} />
+          <input
+            type="number"
+            step="0.01"
+            min={0}
+            className={inputCls}
+            {...form.register("amount")}
+          />
         </Field>
         <Field label="Mode" required error={errors.mode?.message}>
           <select className={`${inputCls} cursor-pointer`} {...form.register("mode")}>
-            {MODES.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
+            {MODES.map((m) => (
+              <option key={m.value} value={m.value}>
+                {m.label}
+              </option>
+            ))}
           </select>
         </Field>
         <Field label="Reference / Cheque No." error={errors.referenceNumber?.message}>
-          <input className={inputCls} placeholder="UTR, cheque number..." {...form.register("referenceNumber")} />
+          <input
+            className={inputCls}
+            placeholder="UTR, cheque number..."
+            {...form.register("referenceNumber")}
+          />
         </Field>
         <div className="sm:col-span-2">
           <Field label="Notes" error={errors.notes?.message}>

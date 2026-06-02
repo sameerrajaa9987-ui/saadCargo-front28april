@@ -58,7 +58,14 @@ export type ConsignmentListQuery = {
 
 export type ConsignmentListResult = {
   items: Consignment[];
-  meta: { total: number; totalPages: number; hasNextPage: boolean; hasPrevPage: boolean; page: number; limit: number };
+  meta: {
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    page: number;
+    limit: number;
+  };
 };
 
 export type ConsignmentCreatePayload = {

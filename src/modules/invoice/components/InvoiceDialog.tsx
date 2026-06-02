@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormDialog } from "@/modules/common/FormDialog";
-import { invoiceSchema, invoiceEditSchema, type InvoiceFormValues, type InvoiceEditFormValues } from "../validations/invoice.validation";
+import {
+  invoiceSchema,
+  invoiceEditSchema,
+  type InvoiceFormValues,
+  type InvoiceEditFormValues,
+} from "../validations/invoice.validation";
 import { useCreateInvoice, useUpdateInvoice } from "../hooks/useInvoices";
 import { useParties } from "@/modules/party/hooks/useParties";
 import { useConsignments } from "@/modules/consignment/hooks/useConsignments";
@@ -20,14 +25,26 @@ interface Props {
   onSuccess: () => void;
 }
 
-const inputCls = "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
+const inputCls =
+  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
 const selectCls = `${inputCls} cursor-pointer`;
 
-function Field({ label, error, required, children }: { label: string; error?: string; required?: boolean; children: React.ReactNode }) {
+function Field({
+  label,
+  error,
+  required,
+  children,
+}: {
+  label: string;
+  error?: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <div>
       <label className="block text-xs font-medium text-muted-foreground mb-1">
-        {label}{required && <span className="text-destructive ml-0.5">*</span>}
+        {label}
+        {required && <span className="text-destructive ml-0.5">*</span>}
       </label>
       {children}
       {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
@@ -41,7 +58,13 @@ function toDateInput(s?: string) {
 }
 
 // Create form (full fields including party + consignment selection)
-function CreateForm({ onOpenChange, onSuccess }: { onOpenChange: (v: boolean) => void; onSuccess: () => void }) {
+function CreateForm({
+  onOpenChange,
+  onSuccess,
+}: {
+  onOpenChange: (v: boolean) => void;
+  onSuccess: () => void;
+}) {
   const createMutation = useCreateInvoice();
   const partiesRes = useParties(INVOICE_MASTER_QUERIES.parties);
   const parties = partiesRes.data?.items ?? [];
@@ -62,9 +85,7 @@ function CreateForm({ onOpenChange, onSuccess }: { onOpenChange: (v: boolean) =>
   const selectedParty = form.watch("party");
   const selectedIds = form.watch("consignmentIds");
 
-  const consignmentsRes = useConsignments(
-    INVOICE_MASTER_QUERIES.onBillConsignments(selectedParty),
-  );
+  const consignmentsRes = useConsignments(INVOICE_MASTER_QUERIES.onBillConsignments(selectedParty));
   const allOnBill = consignmentsRes.data?.items ?? [];
   // Only show consignments not yet linked to any invoice
   const available = allOnBill.filter((c) => !c.invoice);
@@ -72,7 +93,11 @@ function CreateForm({ onOpenChange, onSuccess }: { onOpenChange: (v: boolean) =>
   function toggleConsignment(id: string) {
     const current = form.getValues("consignmentIds");
     if (current.includes(id)) {
-      form.setValue("consignmentIds", current.filter((x) => x !== id), { shouldValidate: true });
+      form.setValue(
+        "consignmentIds",
+        current.filter((x) => x !== id),
+        { shouldValidate: true },
+      );
     } else {
       form.setValue("consignmentIds", [...current, id], { shouldValidate: true });
     }
@@ -107,7 +132,11 @@ function CreateForm({ onOpenChange, onSuccess }: { onOpenChange: (v: boolean) =>
             <Field label="Party" required error={errors.party?.message}>
               <select className={selectCls} {...form.register("party")}>
                 <option value="">Select party...</option>
-                {parties.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                {parties.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
               </select>
             </Field>
           </div>
@@ -118,27 +147,54 @@ function CreateForm({ onOpenChange, onSuccess }: { onOpenChange: (v: boolean) =>
 
         <div className="grid grid-cols-3 gap-4">
           <Field label="CGST %" error={errors.cgstRate?.message}>
-            <input type="number" step="0.01" min={0} className={inputCls} {...form.register("cgstRate")} />
+            <input
+              type="number"
+              step="0.01"
+              min={0}
+              className={inputCls}
+              {...form.register("cgstRate")}
+            />
           </Field>
           <Field label="SGST %" error={errors.sgstRate?.message}>
-            <input type="number" step="0.01" min={0} className={inputCls} {...form.register("sgstRate")} />
+            <input
+              type="number"
+              step="0.01"
+              min={0}
+              className={inputCls}
+              {...form.register("sgstRate")}
+            />
           </Field>
           <Field label="IGST %" error={errors.igstRate?.message}>
-            <input type="number" step="0.01" min={0} className={inputCls} {...form.register("igstRate")} />
+            <input
+              type="number"
+              step="0.01"
+              min={0}
+              className={inputCls}
+              {...form.register("igstRate")}
+            />
           </Field>
         </div>
 
         {/* Consignment selection */}
         <div>
           <p className="text-xs font-medium text-muted-foreground mb-2">
-            Select Consignments (on-bill, uninvoiced){errors.consignmentIds && <span className="text-destructive ml-2">{errors.consignmentIds.message}</span>}
+            Select Consignments (on-bill, uninvoiced)
+            {errors.consignmentIds && (
+              <span className="text-destructive ml-2">{errors.consignmentIds.message}</span>
+            )}
           </p>
           {!selectedParty ? (
-            <p className="rounded-lg border border-dashed border-border p-4 text-sm text-center text-muted-foreground">Select a party to see available consignments</p>
+            <p className="rounded-lg border border-dashed border-border p-4 text-sm text-center text-muted-foreground">
+              Select a party to see available consignments
+            </p>
           ) : consignmentsRes.isLoading ? (
-            <div className="flex justify-center p-4"><div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>
+            <div className="flex justify-center p-4">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            </div>
           ) : available.length === 0 ? (
-            <p className="rounded-lg border border-dashed border-border p-4 text-sm text-center text-muted-foreground">No uninvoiced on-bill consignments for this party</p>
+            <p className="rounded-lg border border-dashed border-border p-4 text-sm text-center text-muted-foreground">
+              No uninvoiced on-bill consignments for this party
+            </p>
           ) : (
             <div className="rounded-xl border border-border overflow-hidden max-h-64 overflow-y-auto">
               <table className="w-full text-xs">
@@ -152,17 +208,29 @@ function CreateForm({ onOpenChange, onSuccess }: { onOpenChange: (v: boolean) =>
                           if (selectedIds.length === available.length) {
                             form.setValue("consignmentIds", [], { shouldValidate: true });
                           } else {
-                            form.setValue("consignmentIds", available.map((c) => c.id), { shouldValidate: true });
+                            form.setValue(
+                              "consignmentIds",
+                              available.map((c) => c.id),
+                              { shouldValidate: true },
+                            );
                           }
                         }}
                         className="cursor-pointer"
                       />
                     </th>
                     <th className="px-3 py-2 text-left font-medium text-muted-foreground">Date</th>
-                    <th className="px-3 py-2 text-left font-medium text-muted-foreground">Station</th>
-                    <th className="px-3 py-2 text-left font-medium text-muted-foreground">Contents</th>
-                    <th className="px-3 py-2 text-right font-medium text-muted-foreground">Freight (₹)</th>
-                    <th className="px-3 py-2 text-right font-medium text-muted-foreground">Total (₹)</th>
+                    <th className="px-3 py-2 text-left font-medium text-muted-foreground">
+                      Station
+                    </th>
+                    <th className="px-3 py-2 text-left font-medium text-muted-foreground">
+                      Contents
+                    </th>
+                    <th className="px-3 py-2 text-right font-medium text-muted-foreground">
+                      Freight (₹)
+                    </th>
+                    <th className="px-3 py-2 text-right font-medium text-muted-foreground">
+                      Total (₹)
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -173,13 +241,22 @@ function CreateForm({ onOpenChange, onSuccess }: { onOpenChange: (v: boolean) =>
                       className={`cursor-pointer transition-colors hover:bg-muted/30 ${selectedIds.includes(c.id) ? "bg-primary/5" : ""}`}
                     >
                       <td className="px-3 py-2">
-                        <input type="checkbox" checked={selectedIds.includes(c.id)} readOnly className="cursor-pointer" />
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.includes(c.id)}
+                          readOnly
+                          className="cursor-pointer"
+                        />
                       </td>
                       <td className="px-3 py-2">{formatDate(c.date)}</td>
-                      <td className="px-3 py-2 font-mono font-semibold text-primary">{c.destinationStation}</td>
+                      <td className="px-3 py-2 font-mono font-semibold text-primary">
+                        {c.destinationStation}
+                      </td>
                       <td className="px-3 py-2 text-muted-foreground">{c.contents ?? "—"}</td>
                       <td className="px-3 py-2 text-right">{formatCurrency(c.freightAmount)}</td>
-                      <td className="px-3 py-2 text-right font-semibold">{formatCurrency(c.totalAmount)}</td>
+                      <td className="px-3 py-2 text-right font-semibold">
+                        {formatCurrency(c.totalAmount)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -187,7 +264,9 @@ function CreateForm({ onOpenChange, onSuccess }: { onOpenChange: (v: boolean) =>
             </div>
           )}
           {selectedIds.length > 0 && (
-            <p className="mt-1 text-xs text-muted-foreground">{selectedIds.length} consignment(s) selected</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {selectedIds.length} consignment(s) selected
+            </p>
           )}
         </div>
 
@@ -200,7 +279,15 @@ function CreateForm({ onOpenChange, onSuccess }: { onOpenChange: (v: boolean) =>
 }
 
 // Edit form (draft only — only date, tax rates, notes editable)
-function EditForm({ value, onOpenChange, onSuccess }: { value: Invoice; onOpenChange: (v: boolean) => void; onSuccess: () => void }) {
+function EditForm({
+  value,
+  onOpenChange,
+  onSuccess,
+}: {
+  value: Invoice;
+  onOpenChange: (v: boolean) => void;
+  onSuccess: () => void;
+}) {
   const updateMutation = useUpdateInvoice();
 
   const form = useForm<InvoiceEditFormValues>({
@@ -243,13 +330,31 @@ function EditForm({ value, onOpenChange, onSuccess }: { value: Invoice; onOpenCh
         </Field>
         <div className="grid grid-cols-3 gap-4">
           <Field label="CGST %" error={errors.cgstRate?.message}>
-            <input type="number" step="0.01" min={0} className={inputCls} {...form.register("cgstRate")} />
+            <input
+              type="number"
+              step="0.01"
+              min={0}
+              className={inputCls}
+              {...form.register("cgstRate")}
+            />
           </Field>
           <Field label="SGST %" error={errors.sgstRate?.message}>
-            <input type="number" step="0.01" min={0} className={inputCls} {...form.register("sgstRate")} />
+            <input
+              type="number"
+              step="0.01"
+              min={0}
+              className={inputCls}
+              {...form.register("sgstRate")}
+            />
           </Field>
           <Field label="IGST %" error={errors.igstRate?.message}>
-            <input type="number" step="0.01" min={0} className={inputCls} {...form.register("igstRate")} />
+            <input
+              type="number"
+              step="0.01"
+              min={0}
+              className={inputCls}
+              {...form.register("igstRate")}
+            />
           </Field>
         </div>
         <Field label="Notes" error={errors.notes?.message}>

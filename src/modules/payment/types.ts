@@ -23,7 +23,14 @@ export type PaymentListQuery = {
 
 export type PaymentListResult = {
   items: Payment[];
-  meta: { total: number; totalPages: number; hasNextPage: boolean; hasPrevPage: boolean; page: number; limit: number };
+  meta: {
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    page: number;
+    limit: number;
+  };
 };
 
 export type PaymentCreatePayload = {

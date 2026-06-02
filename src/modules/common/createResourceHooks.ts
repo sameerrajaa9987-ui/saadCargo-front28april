@@ -11,7 +11,7 @@ export function createResourceHooks<
     create: (payload: TCreatePayload) => Promise<unknown>;
     update: (id: string, payload: Partial<TCreatePayload>) => Promise<unknown>;
     remove: (id: string) => Promise<void>;
-  }
+  },
 ) {
   const KEYS = {
     all: [key] as const,

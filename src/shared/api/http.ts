@@ -27,7 +27,7 @@ http.interceptors.response.use(
       }
     }
     return Promise.reject(err);
-  }
+  },
 );
 
 type ApiValidationIssue = { path?: Array<string | number>; message?: string };

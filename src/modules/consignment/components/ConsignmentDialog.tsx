@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormDialog } from "@/modules/common/FormDialog";
-import { consignmentSchema, type ConsignmentFormValues } from "../validations/consignment.validation";
+import {
+  consignmentSchema,
+  type ConsignmentFormValues,
+} from "../validations/consignment.validation";
 import { useCreateConsignment, useUpdateConsignment } from "../hooks/useConsignments";
 import { CONSIGNMENT_TYPES, PAYMENT_MODES } from "../constants/consignment.constants";
 import { getApiErrorMessage } from "@/shared/api/http";
@@ -20,13 +23,27 @@ interface Props {
   parties: Party[];
 }
 
-const inputCls = "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
+const inputCls =
+  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition";
 const selectCls = `${inputCls} cursor-pointer`;
 
-function Field({ label, error, required, children }: { label: string; error?: string; required?: boolean; children: React.ReactNode }) {
+function Field({
+  label,
+  error,
+  required,
+  children,
+}: {
+  label: string;
+  error?: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <div>
-      <label className="block text-xs font-medium text-muted-foreground mb-1">{label}{required && <span className="text-destructive ml-0.5">*</span>}</label>
+      <label className="block text-xs font-medium text-muted-foreground mb-1">
+        {label}
+        {required && <span className="text-destructive ml-0.5">*</span>}
+      </label>
       {children}
       {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
     </div>
@@ -139,7 +156,11 @@ export function ConsignmentDialog({ open, onOpenChange, mode, value, onSuccess, 
           <Field label="Party" required error={errors.party?.message}>
             <select className={selectCls} {...form.register("party")}>
               <option value="">Select party...</option>
-              {parties.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              {parties.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
             </select>
           </Field>
         </div>
@@ -148,10 +169,22 @@ export function ConsignmentDialog({ open, onOpenChange, mode, value, onSuccess, 
           <input type="number" min={1} className={inputCls} {...form.register("packages")} />
         </Field>
         <Field label="Actual Weight (kg)" error={errors.actualWeight?.message}>
-          <input type="number" step="0.01" min={0} className={inputCls} {...form.register("actualWeight")} />
+          <input
+            type="number"
+            step="0.01"
+            min={0}
+            className={inputCls}
+            {...form.register("actualWeight")}
+          />
         </Field>
         <Field label="Chargeable Weight (kg)" required error={errors.chargeableWeight?.message}>
-          <input type="number" step="0.01" min={0} className={inputCls} {...form.register("chargeableWeight")} />
+          <input
+            type="number"
+            step="0.01"
+            min={0}
+            className={inputCls}
+            {...form.register("chargeableWeight")}
+          />
         </Field>
 
         <Field label="Origin Station" error={errors.originStation?.message}>
@@ -161,21 +194,37 @@ export function ConsignmentDialog({ open, onOpenChange, mode, value, onSuccess, 
           <input className={inputCls} placeholder="NDLS" {...form.register("destinationStation")} />
         </Field>
         <Field label="Contents" error={errors.contents?.message}>
-          <input className={inputCls} placeholder="Goods description" {...form.register("contents")} />
+          <input
+            className={inputCls}
+            placeholder="Goods description"
+            {...form.register("contents")}
+          />
         </Field>
 
         <Field label="Type" required error={errors.type?.message}>
           <select className={selectCls} {...form.register("type")}>
-            {CONSIGNMENT_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+            {CONSIGNMENT_TYPES.map((t) => (
+              <option key={t.value} value={t.value}>
+                {t.label}
+              </option>
+            ))}
           </select>
         </Field>
         <Field label="Payment Mode" required error={errors.paymentMode?.message}>
           <select className={selectCls} {...form.register("paymentMode")}>
-            {PAYMENT_MODES.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
+            {PAYMENT_MODES.map((m) => (
+              <option key={m.value} value={m.value}>
+                {m.label}
+              </option>
+            ))}
           </select>
         </Field>
         <Field label="Railway Receipt No." error={errors.railwayReceiptNumber?.message}>
-          <input className={inputCls} placeholder="PR/RR number" {...form.register("railwayReceiptNumber")} />
+          <input
+            className={inputCls}
+            placeholder="PR/RR number"
+            {...form.register("railwayReceiptNumber")}
+          />
         </Field>
 
         <Field label="Train No." error={errors.trainNumber?.message}>
@@ -189,19 +238,45 @@ export function ConsignmentDialog({ open, onOpenChange, mode, value, onSuccess, 
         </Field>
 
         <div className="border-t border-border pt-3 sm:col-span-2 md:col-span-3">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Charges (₹)</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+            Charges (₹)
+          </p>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <Field label="Freight Amount" required error={errors.freightAmount?.message}>
-              <input type="number" step="0.01" min={0} className={inputCls} {...form.register("freightAmount")} />
+              <input
+                type="number"
+                step="0.01"
+                min={0}
+                className={inputCls}
+                {...form.register("freightAmount")}
+              />
             </Field>
             <Field label="Reimbursement" error={errors.reimbursementAmount?.message}>
-              <input type="number" step="0.01" min={0} className={inputCls} {...form.register("reimbursementAmount")} />
+              <input
+                type="number"
+                step="0.01"
+                min={0}
+                className={inputCls}
+                {...form.register("reimbursementAmount")}
+              />
             </Field>
             <Field label="Hamali" error={errors.hamaliCharges?.message}>
-              <input type="number" step="0.01" min={0} className={inputCls} {...form.register("hamaliCharges")} />
+              <input
+                type="number"
+                step="0.01"
+                min={0}
+                className={inputCls}
+                {...form.register("hamaliCharges")}
+              />
             </Field>
             <Field label="Other" error={errors.otherCharges?.message}>
-              <input type="number" step="0.01" min={0} className={inputCls} {...form.register("otherCharges")} />
+              <input
+                type="number"
+                step="0.01"
+                min={0}
+                className={inputCls}
+                {...form.register("otherCharges")}
+              />
             </Field>
           </div>
         </div>
