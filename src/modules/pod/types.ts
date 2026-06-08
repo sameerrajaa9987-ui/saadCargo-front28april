@@ -20,8 +20,9 @@ export type Pod = {
   toPayAmount: number;
   otherCharges: number;
   totalAmount: number;
-  deliveryStatus: "received" | "loaded" | "in_transit" | "delivered" | "returned";
+  deliveryStatus: "received" | "loaded" | "in_transit" | "unloaded" | "delivered" | "returned";
   loadedOn?: string;
+  unloadedOn?: string;
   deliveredOn?: string;
   railwayReceiptNumber?: string;
   notes?: string;

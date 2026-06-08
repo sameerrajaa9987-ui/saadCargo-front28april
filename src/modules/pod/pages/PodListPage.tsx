@@ -14,6 +14,7 @@ const STATUSES = [
   { value: "received", label: "Received" },
   { value: "loaded", label: "Loaded" },
   { value: "in_transit", label: "In Transit" },
+  { value: "unloaded", label: "Unloaded" },
   { value: "delivered", label: "Delivered" },
   { value: "returned", label: "Returned" },
 ];
@@ -22,6 +23,7 @@ const STATUS_COLORS: Record<string, string> = {
   received: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300",
   loaded: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
   in_transit: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+  unloaded: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
   delivered: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
   returned: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
 };
@@ -128,7 +130,16 @@ export function PodListPage() {
           getValue: (p) => (
             <select
               value={p.deliveryStatus}
-              onChange={(e) => statusMutation.mutate({ id: p.id, deliveryStatus: e.target.value })}
+              onChange={(e) => {
+                const status = STATUSES.find((s) => s.value === e.target.value);
+                statusMutation.mutate({
+                  id: p.id,
+                  deliveryStatus: e.target.value,
+                  statusLabel: status?.label ?? e.target.value,
+                  mobile: p.consigneeMobile || p.consignorMobile,
+                });
+                // TODO: actually send status SMS via msg91 (to be implemented)
+              }}
               className={cn(
                 "rounded-full px-2 py-0.5 text-xs font-medium border-0 cursor-pointer focus:outline-none",
                 STATUS_COLORS[p.deliveryStatus] ?? "",

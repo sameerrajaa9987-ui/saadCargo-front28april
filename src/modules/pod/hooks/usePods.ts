@@ -20,11 +20,23 @@ export const useDeletePod = crud.useDelete;
 export function useUpdatePodStatus() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, deliveryStatus }: { id: string; deliveryStatus: string }) =>
-      updatePodStatus(id, deliveryStatus),
-    onSuccess: () => {
+    mutationFn: ({
+      id,
+      deliveryStatus,
+    }: {
+      id: string;
+      deliveryStatus: string;
+      statusLabel?: string;
+      mobile?: string;
+    }) => updatePodStatus(id, deliveryStatus),
+    onSuccess: (_data, vars) => {
       qc.invalidateQueries({ queryKey: ["pods"] });
-      toast.success("Status updated");
+      const label = vars.statusLabel ?? vars.deliveryStatus;
+      toast.success(
+        vars.mobile
+          ? `Status updated to "${label}" — message sent to ${vars.mobile}`
+          : `Status updated to "${label}"`,
+      );
     },
     onError: (err) => toast.error(getApiErrorMessage(err)),
   });
