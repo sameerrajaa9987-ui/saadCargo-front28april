@@ -36,6 +36,11 @@
     --destructive: 0 72% 51%;
     --destructive-foreground: 42 37% 94%;
 
+    --success: 160 84% 33%; /* emerald — paid / delivered */
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 48%; /* amber — pending / hold */
+    --warning-foreground: 222 36% 15%;
+
     --border: 42 22% 80%;
     --input: 42 22% 80%;
     --ring: 19 84% 49%;
@@ -75,6 +80,11 @@
     --destructive: 0 70% 55%;
     --destructive-foreground: 211 45% 93%;
 
+    --success: 158 64% 45%;
+    --success-foreground: 217 53% 12%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 217 53% 12%;
+
     --border: 218 35% 26%;
     --input: 218 35% 26%;
     --ring: 19 100% 60%;
@@ -107,7 +117,26 @@ body,
 }
 
 .erp-page {
-  @apply space-y-4;
+  @apply space-y-4 animate-fade-in;
+}
+
+/* ── 2026 polish ──────────────────────────────────────────────────────────── */
+
+/* Measured glassmorphism for the top bar and overlays. */
+.sc-glass {
+  @apply border-border/60 bg-card/70 backdrop-blur-xl;
+}
+
+/* Brand gradient text helper (navy → saffron). */
+.sc-gradient-text {
+  @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+}
+
+/* Ledger-style numerals so figures align in columns. */
+table,
+.sc-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
 }
 
 /* Smooth theme transitions */
@@ -115,4 +144,16 @@ html {
   transition:
     background-color 240ms ease,
     color 240ms ease;
+}
+
+/* Thin custom scrollbars for a premium feel */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-muted-foreground/30;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
 }

@@ -1,21 +1,17 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ChevronRight, X } from "lucide-react";
-import { MENU, type MenuItem } from "./menu";
+import { SECTIONS, type MenuItem } from "./menu";
 import { LogoMark } from "@/shared/components/Logo";
 import { useSidebar } from "./sidebarContext";
 import { cn } from "@/lib/utils";
 
 /**
- * Responsive sidebar:
+ * Responsive sidebar with grouped sections:
  *   • md+ open      → 240px push column
  *   • md+ closed    → 64px icon-only rail
  *   • <md open      → fixed overlay drawer with scrim
  *   • <md closed    → off-canvas (translate-x-[-100%])
- *
- * The collapsed-to-icons mode hides labels and chevrons; nested groups
- * collapse to their parent icon, which becomes a NavLink to the first
- * child (so a single click on Reports goes to Daily Report, etc.).
  */
 export function Sidebar() {
   const location = useLocation();
@@ -187,7 +183,9 @@ export function Sidebar() {
           <LogoMark size={collapsed ? 36 : 32} />
           {!collapsed && (
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-bold text-sidebar-foreground truncate">Saad Cargo</div>
+              <div className="text-sm font-bold text-sidebar-foreground truncate">
+                Saad <span className="text-primary">Cargo</span>
+              </div>
               <div className="text-xs text-sidebar-foreground/50 truncate">Mumbai CRM</div>
             </div>
           )}
@@ -204,8 +202,21 @@ export function Sidebar() {
           )}
         </div>
 
-        <nav className={cn("flex-1 overflow-y-auto p-2", collapsed ? "space-y-1" : "space-y-0.5")}>
-          {MENU.map((item) => renderItem(item))}
+        <nav className="flex-1 overflow-y-auto p-2">
+          {SECTIONS.map((section, si) => (
+            <div key={section.heading ?? `s${si}`}>
+              {collapsed
+                ? si > 0 && <div className="mx-2 my-2 h-px bg-sidebar-border/60" />
+                : section.heading && (
+                    <p className="px-3 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/40">
+                      {section.heading}
+                    </p>
+                  )}
+              <div className={cn(collapsed ? "space-y-1" : "space-y-0.5")}>
+                {section.items.map((item) => renderItem(item))}
+              </div>
+            </div>
+          ))}
         </nav>
       </aside>
     </>
