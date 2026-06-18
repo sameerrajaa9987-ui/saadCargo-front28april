@@ -14,7 +14,7 @@ export type StatusSmsResult = {
   sent?: boolean;
   sentTo?: string[];
   results?: { mobile: string; sent: boolean; error?: string }[];
-  reason?: "no_template_for_status" | "sms_disabled" | "no_mobile";
+  reason?: "no_template_for_status" | "sms_disabled" | "no_mobile" | "outside_business_hours";
 };
 
 export async function updatePodStatus(id: string, deliveryStatus: string) {

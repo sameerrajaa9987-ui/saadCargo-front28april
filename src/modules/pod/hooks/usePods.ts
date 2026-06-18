@@ -45,6 +45,10 @@ export function useUpdatePodStatus() {
           toast.success(`Status updated to "${label}"`);
           toast.error("SMS could not be sent");
         }
+      } else if (sms?.reason === "outside_business_hours") {
+        toast.success(
+          `Status updated to "${label}" — SMS not sent (outside business hours 9 AM–9 PM)`,
+        );
       } else if (sms?.reason === "no_mobile") {
         toast.success(`Status updated to "${label}" — no mobile on file, SMS skipped`);
       } else {
