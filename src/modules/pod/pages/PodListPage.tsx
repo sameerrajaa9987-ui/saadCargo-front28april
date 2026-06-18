@@ -136,9 +136,7 @@ export function PodListPage() {
                   id: p.id,
                   deliveryStatus: e.target.value,
                   statusLabel: status?.label ?? e.target.value,
-                  mobile: p.consigneeMobile || p.consignorMobile,
                 });
-                // TODO: actually send status SMS via msg91 (to be implemented)
               }}
               className={cn(
                 "rounded-full px-2 py-0.5 text-xs font-medium border-0 cursor-pointer focus:outline-none",

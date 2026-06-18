@@ -9,9 +9,20 @@ export const createPod = (p: PodCreatePayload) => api.create(p);
 export const updatePod = (id: string, p: Partial<PodCreatePayload>) => api.update(id, p);
 export const deletePod = (id: string) => api.remove(id);
 
+export type StatusSmsResult = {
+  attempted: boolean;
+  sent?: boolean;
+  sentTo?: string[];
+  results?: { mobile: string; sent: boolean; error?: string }[];
+  reason?: "no_template_for_status" | "sms_disabled" | "no_mobile";
+};
+
 export async function updatePodStatus(id: string, deliveryStatus: string) {
-  const res = await http.patch<{ data: Pod }>(`/pods/${id}/status`, { deliveryStatus });
-  return res.data.data;
+  const res = await http.patch<{ data: Pod; meta?: { sms?: StatusSmsResult } }>(
+    `/pods/${id}/status`,
+    { deliveryStatus },
+  );
+  return { pod: res.data.data, sms: res.data.meta?.sms };
 }
 
 export const getPodPdfPath = (id: string): string => `/pods/${id}/pdf`;
