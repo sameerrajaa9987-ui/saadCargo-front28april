@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Download } from "lucide-react";
-import { getOutstandingReport, getExportUrl } from "../api/reportsApi";
+import { getOutstandingReport, downloadReportExport } from "../api/reportsApi";
 import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
@@ -29,14 +29,12 @@ export function OutstandingReportPage() {
             Party-wise pending amounts, aged by consignment date
           </p>
         </div>
-        <a
-          href={getExportUrl("outstanding", {})}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={() => downloadReportExport("outstanding", {}, "outstanding-report.xlsx")}
           className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-500 transition-colors"
         >
           <Download className="h-4 w-4" /> Export Excel
-        </a>
+        </button>
       </div>
 
       {/* Aging summary tiles */}

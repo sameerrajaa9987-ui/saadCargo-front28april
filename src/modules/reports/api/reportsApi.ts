@@ -1,4 +1,5 @@
-import { http } from "@/shared/api/http";
+import { http, getApiErrorMessage } from "@/shared/api/http";
+import { toast } from "@/shared/lib/toast";
 
 export type DailyReportRow = {
   date: string;
@@ -92,13 +93,37 @@ export async function getGstReport(params: { month: number; year: number }) {
   return { rows: res.data.data, summary: res.data.meta };
 }
 
-export function getExportUrl(
+/**
+ * Download an Excel export through the authenticated axios client so the bearer
+ * token is attached. A plain `<a href>` cannot send the token — the server then
+ * rejects it with "No token provided" (401). We fetch the file as a blob and
+ * trigger a download from it.
+ */
+export async function downloadReportExport(
   type: "daily" | "outstanding" | "station" | "gst",
   params: Record<string, string | number>,
-) {
-  const base = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api";
-  const qs = new URLSearchParams(
-    Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)])),
-  ).toString();
-  return `${base}/reports/${type}/export?${qs}`;
+  filename: string,
+): Promise<void> {
+  try {
+    const res = await http.get(`/reports/${type}/export`, {
+      params,
+      responseType: "blob",
+    });
+    const blob = new Blob([res.data], {
+      type:
+        (res.headers?.["content-type"] as string | undefined) ||
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  } catch (err) {
+    toast.error(getApiErrorMessage(err));
+  }
 }

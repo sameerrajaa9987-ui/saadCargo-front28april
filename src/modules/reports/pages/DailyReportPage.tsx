@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Download } from "lucide-react";
-import { getDailyReport, getExportUrl } from "../api/reportsApi";
+import { getDailyReport, downloadReportExport } from "../api/reportsApi";
 import { formatCurrency } from "@/lib/utils";
 
 export function DailyReportPage() {
@@ -27,14 +27,18 @@ export function DailyReportPage() {
           <h1 className="text-xl font-bold text-foreground">Daily Report</h1>
           <p className="text-sm text-muted-foreground">Consignment summary grouped by date</p>
         </div>
-        <a
-          href={getExportUrl("daily", { startDate, endDate })}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={() =>
+            downloadReportExport(
+              "daily",
+              { startDate, endDate },
+              `daily-report_${startDate}_to_${endDate}.xlsx`,
+            )
+          }
           className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-500 transition-colors"
         >
           <Download className="h-4 w-4" /> Export Excel
-        </a>
+        </button>
       </div>
 
       <div className="rounded-xl border border-border bg-card p-4 shadow-sm">

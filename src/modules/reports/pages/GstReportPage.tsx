@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Download } from "lucide-react";
-import { getGstReport, getExportUrl } from "../api/reportsApi";
+import { getGstReport, downloadReportExport } from "../api/reportsApi";
 import { formatCurrency } from "@/lib/utils";
 
 export function GstReportPage() {
@@ -28,14 +28,18 @@ export function GstReportPage() {
           <h1 className="text-xl font-bold">GST Summary</h1>
           <p className="text-sm text-muted-foreground">Monthly invoice-wise GST breakup</p>
         </div>
-        <a
-          href={getExportUrl("gst", { month, year })}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={() =>
+            downloadReportExport(
+              "gst",
+              { month, year },
+              `gst-report_${year}-${String(month).padStart(2, "0")}.xlsx`,
+            )
+          }
           className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-500 transition-colors"
         >
           <Download className="h-4 w-4" /> Export Excel
-        </a>
+        </button>
       </div>
 
       <div className="rounded-xl border border-border bg-card p-4 shadow-sm">

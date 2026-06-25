@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Download } from "lucide-react";
-import { getStationReport } from "@/modules/reports/api/reportsApi";
-import { getExportUrl } from "@/modules/reports/api/reportsApi";
+import { getStationReport, downloadReportExport } from "@/modules/reports/api/reportsApi";
 import { formatCurrency } from "@/lib/utils";
 
 export function DailySummaryPage() {
@@ -37,14 +36,18 @@ export function DailySummaryPage() {
             Station-wise consignment summary for a single day
           </p>
         </div>
-        <a
-          href={getExportUrl("station", { startDate: date, endDate: date })}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={() =>
+            downloadReportExport(
+              "station",
+              { startDate: date, endDate: date },
+              `daily-summary_${date}.xlsx`,
+            )
+          }
           className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-500 transition-colors"
         >
           <Download className="h-4 w-4" /> Export Excel
-        </a>
+        </button>
       </div>
 
       {/* Date picker */}
