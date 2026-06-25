@@ -14,6 +14,7 @@ export const PAYMENT_MODES = [
 
 export const PAYMENT_STATUSES = [
   { value: "pending", label: "Pending" },
+  { value: "partial", label: "Partial" },
   { value: "received", label: "Received" },
   { value: "settled", label: "Settled" },
 ];
@@ -27,6 +28,7 @@ export const PAYMENT_MODE_COLORS: Record<string, string> = {
 
 export const PAYMENT_STATUS_COLORS: Record<string, string> = {
   pending: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
+  partial: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
   received: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
   settled: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400",
 };

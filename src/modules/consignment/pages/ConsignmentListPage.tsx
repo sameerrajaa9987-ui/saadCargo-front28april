@@ -35,7 +35,7 @@ export function ConsignmentListPage() {
       title="Consignments"
       subtitle="Daily railway parcel entries"
       newButtonText="New Consignment"
-      minTableWidth="min-w-[1400px]"
+      minTableWidth="min-w-[1600px]"
       emptyText="No consignments found."
       deleteConfirmText="Delete this consignment permanently?"
       useList={useConsignments}
@@ -167,6 +167,28 @@ export function ConsignmentListPage() {
         {
           header: "Total (₹)",
           getValue: (c) => <span className="font-semibold">{formatCurrency(c.totalAmount)}</span>,
+        },
+        {
+          header: "Paid (₹)",
+          getValue: (c) => (
+            <span className="text-muted-foreground">{formatCurrency(c.amountPaid ?? 0)}</span>
+          ),
+        },
+        {
+          header: "Balance (₹)",
+          getValue: (c) => {
+            const due = c.balanceDue ?? c.totalAmount - (c.amountPaid ?? 0);
+            return (
+              <span
+                className={
+                  due > 0 ? "font-semibold text-red-600 dark:text-red-400" : "text-muted-foreground"
+                }
+                title={due > 0 ? "Amount still to be collected for this parcel" : "Fully collected"}
+              >
+                {formatCurrency(due)}
+              </span>
+            );
+          },
         },
       ]}
       renderDialog={({ open, onOpenChange, mode, value, onSuccess }) => (

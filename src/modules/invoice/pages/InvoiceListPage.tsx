@@ -42,7 +42,7 @@ export function InvoiceListPage() {
       title="GST Invoices"
       subtitle="Monthly credit invoices for on-bill parties"
       newButtonText="New Invoice"
-      minTableWidth="min-w-[1200px]"
+      minTableWidth="min-w-[1360px]"
       emptyText="No invoices found."
       deleteConfirmText="Delete this draft invoice?"
       useList={useInvoices}
@@ -141,6 +141,17 @@ export function InvoiceListPage() {
         },
         { header: "Consignments", getValue: (inv) => inv.consignments.length },
         { header: "Service (₹)", getValue: (inv) => formatCurrency(inv.serviceSubtotal) },
+        {
+          header: "Reimbursement (₹)",
+          getValue: (inv) => (
+            <span
+              className="text-muted-foreground"
+              title="Railway freight paid on customer's behalf — non-taxable, no GST"
+            >
+              {formatCurrency(inv.reimbursementSubtotal ?? 0)}
+            </span>
+          ),
+        },
         { header: "CGST (₹)", getValue: (inv) => formatCurrency(inv.cgstAmount) },
         { header: "SGST (₹)", getValue: (inv) => formatCurrency(inv.sgstAmount) },
         {
